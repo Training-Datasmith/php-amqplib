@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * Usage:
  *  php batch_publish.php msg_count batch_size
@@ -7,9 +9,9 @@
 include(__DIR__ . '/config.php');
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Exception\AMQPConnectionBlockedException;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
 use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Exception\AMQPConnectionBlockedException;
 
 $exchange = 'bench_exchange';
 $queue = 'bench_queue';
@@ -22,7 +24,6 @@ $channel->queue_declare($queue, false, false, false, false);
 $channel->exchange_declare($exchange, AMQPExchangeType::DIRECT, false, false, false);
 
 $channel->queue_bind($queue, $exchange);
-
 
 $messageBody = <<<EOT
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz

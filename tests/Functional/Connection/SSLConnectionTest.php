@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Connection;
 
 use PhpAmqpLib\Tests\Functional\AbstractConnectionTest;
@@ -53,7 +55,7 @@ class SSLConnectionTest extends AbstractConnectionTest
             ],
         ];
         $sets[] = [
-            $options
+            $options,
         ];
 
         // #1 TLS protocol
@@ -67,7 +69,7 @@ class SSLConnectionTest extends AbstractConnectionTest
                 'verify_peer' => false,
                 'verify_peer_name' => false,
                 'SNI_enabled' => true,
-            ]
+            ],
         ];
         $sets[] = [$options];
 
@@ -79,19 +81,19 @@ class SSLConnectionTest extends AbstractConnectionTest
             ],
         ];
         $sets[] = [
-            $options
+            $options,
         ];
 
         // #4 non-TLS options
         $options = ['port' => 5672];
         $sets[] = [
-            $options
+            $options,
         ];
 
         // #5 TLS crypto method
         $options[] = ['ssl' => ['crypto_method' => STREAM_CRYPTO_METHOD_ANY_CLIENT]];
         $sets[] = [
-            $options
+            $options,
         ];
 
         return $sets;

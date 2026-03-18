@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 include(__DIR__ . '/config.php');
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -17,7 +19,7 @@ $channel = $connection->channel();
 $channel->queue_declare('test11', false, true, false, false, false, new AMQPTable([
    'x-dead-letter-exchange' => 't_test1',
    'x-message-ttl' => 15000,
-   'x-expires' => 16000
+   'x-expires' => 16000,
 ]));
 
 $channel->close();

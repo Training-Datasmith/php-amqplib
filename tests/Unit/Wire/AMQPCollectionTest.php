@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Wire;
 
 use PhpAmqpLib\Exception\AMQPInvalidArgumentException;
@@ -29,7 +31,8 @@ class AMQPCollectionTest extends TestCase
             ['foo'],
             [],
             new \DateTime('2009-02-13 23:31:30'),
-            (class_exists('DateTimeImmutable')
+            (
+                class_exists('DateTimeImmutable')
                 ? new \DateTimeImmutable('2009-02-13 23:31:30')
                 : new \DateTime('2009-02-13 23:31:30')
             ),
@@ -268,7 +271,7 @@ class AMQPCollectionTest extends TestCase
                     [
                         'foo' => [
                             Wire\AMQPAbstractCollection::getDataTypeForSymbol('S'),
-                            'bar'
+                            'bar',
                         ],
                     ],
                 ],
@@ -310,7 +313,7 @@ class AMQPCollectionTest extends TestCase
     public function encode_unknown_data_type()
     {
         $this->expectException(AMQPOutOfBoundsException::class);
-        new Wire\AMQPArray(array(new \stdClass()));
+        new Wire\AMQPArray([new \stdClass()]);
     }
 
     /**
@@ -491,7 +494,7 @@ class AMQPCollectionTest extends TestCase
 
         $a = new Wire\AMQPArray();
 
-        $a->push(array(), Wire\AMQPArray::T_ARRAY);
+        $a->push([], Wire\AMQPArray::T_ARRAY);
     }
 
     /**
@@ -504,7 +507,7 @@ class AMQPCollectionTest extends TestCase
 
         $a = new Wire\AMQPArray();
 
-        $a->push(array(), Wire\AMQPArray::T_TABLE);
+        $a->push([], Wire\AMQPArray::T_TABLE);
     }
 
     /**
@@ -708,7 +711,7 @@ class AMQPCollectionTest extends TestCase
                 ['bar' => 'baz'],
                 ['boo', false, 5],
                 true,
-                null
+                null,
             ],
             'array_empty' => [],
             'table' => [
@@ -771,7 +774,7 @@ class AMQPCollectionTest extends TestCase
                 ['bar' => 'baz'],
                 ['boo', false, 5],
                 true,
-                null
+                null,
             ],
             'array_empty' => [],
             'table' => [

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Usage: php file_consume.php 100
  */
@@ -20,16 +22,11 @@ $ch->queue_declare($queue, false, false, false, false);
 $ch->exchange_declare($exchange, 'direct', false, false, false);
 $ch->queue_bind($queue, $exchange);
 
-
-
 class FileConsumer
 {
-
     protected $msgCount = 0;
 
     protected $startTime;
-
-
 
     /**
      * @param \PhpAmqpLib\Message\AMQPMessage $msg
@@ -47,8 +44,6 @@ class FileConsumer
         $this->msgCount++;
     }
 }
-
-
 
 $ch->basic_consume($queue, '', false, true, false, false, [new FileConsumer(), 'process_message']);
 

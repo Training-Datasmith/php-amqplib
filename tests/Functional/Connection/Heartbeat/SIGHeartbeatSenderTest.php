@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Connection\Heartbeat;
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -128,19 +130,19 @@ class SIGHeartbeatSenderTest extends AbstractConnectionTest
      * @outputBuffering disabled
      * @covers \PhpAmqpLib\Connection\Heartbeat\SIGHeartbeatSender::unregister()
      */
-     public function child_process_must_be_terminated_after_unregister()
-     {
-         $property = new \ReflectionProperty(get_class($this->sender), 'childPid');
-         $property->setAccessible(true);
+    public function child_process_must_be_terminated_after_unregister()
+    {
+        $property = new \ReflectionProperty(get_class($this->sender), 'childPid');
+        $property->setAccessible(true);
 
-         $this->sender->register();
-         $pid = $property->getValue($this->sender);
-         self::assertGreaterThan(0, $pid);
+        $this->sender->register();
+        $pid = $property->getValue($this->sender);
+        self::assertGreaterThan(0, $pid);
 
-         $this->sender->unregister();
+        $this->sender->unregister();
 
-         $result = pcntl_waitpid($pid, $status, WNOHANG);
-         self::assertEquals(-1, $result);
-         self::assertEquals(0, $status);
-     }
+        $result = pcntl_waitpid($pid, $status, WNOHANG);
+        self::assertEquals(-1, $result);
+        self::assertEquals(0, $status);
+    }
 }

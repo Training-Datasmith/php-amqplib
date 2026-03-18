@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Channel;
 
 class ChannelConsumeTest extends ChannelTestCase
@@ -10,7 +12,7 @@ class ChannelConsumeTest extends ChannelTestCase
     public function basic_consume_same_tag_throws_exception()
     {
         $this->expectException(\InvalidArgumentException::class);
-        list($queue, ,) = $this->channel->queue_declare();
+        list($queue, , ) = $this->channel->queue_declare();
         $consumerTag = $this->channel->basic_consume($queue, '');
         $this->channel->basic_consume($queue, $consumerTag);
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Channel\AbstractChannel;
@@ -12,34 +14,34 @@ use PhpAmqpLib\Wire;
 abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
 {
     //protocol defines available field types and their corresponding symbols
-    const PROTOCOL_RBT = 'rabbit'; //pseudo proto
+    public const PROTOCOL_RBT = 'rabbit'; //pseudo proto
 
     //Abstract data types
-    const T_INT_SHORTSHORT = 1;
-    const T_INT_SHORTSHORT_U = 2;
-    const T_INT_SHORT = 3;
-    const T_INT_SHORT_U = 4;
-    const T_INT_LONG = 5;
-    const T_INT_LONG_U = 6;
-    const T_INT_LONGLONG = 7;
-    const T_INT_LONGLONG_U = 8;
+    public const T_INT_SHORTSHORT = 1;
+    public const T_INT_SHORTSHORT_U = 2;
+    public const T_INT_SHORT = 3;
+    public const T_INT_SHORT_U = 4;
+    public const T_INT_LONG = 5;
+    public const T_INT_LONG_U = 6;
+    public const T_INT_LONGLONG = 7;
+    public const T_INT_LONGLONG_U = 8;
 
-    const T_DECIMAL = 9;
-    const T_TIMESTAMP = 10;
-    const T_VOID = 11;
+    public const T_DECIMAL = 9;
+    public const T_TIMESTAMP = 10;
+    public const T_VOID = 11;
 
-    const T_BOOL = 12;
+    public const T_BOOL = 12;
 
-    const T_STRING_SHORT = 13;
-    const T_STRING_LONG = 14;
+    public const T_STRING_SHORT = 13;
+    public const T_STRING_LONG = 14;
 
-    const T_ARRAY = 15;
-    const T_TABLE = 16;
+    public const T_ARRAY = 15;
+    public const T_TABLE = 16;
 
-    const T_BYTES = 17;
+    public const T_BYTES = 17;
 
-    const T_FLOAT = 18;
-    const T_DOUBLE = 19;
+    public const T_FLOAT = 18;
+    public const T_DOUBLE = 19;
 
     /**
      * @var string
@@ -58,7 +60,7 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
         self::T_DECIMAL => 'D',
         self::T_TIMESTAMP => 'T',
         self::T_STRING_LONG => 'S',
-        self::T_TABLE => 'F'
+        self::T_TABLE => 'F',
     ];
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire\IO;
 
 use PhpAmqpLib\Connection\AMQPConnectionConfig;
@@ -11,7 +13,7 @@ use PhpAmqpLib\Wire\AMQPWriter;
 
 abstract class AbstractIO
 {
-    const BUFFER_SIZE = 8192;
+    public const BUFFER_SIZE = 8192;
 
     /** @var null|AMQPConnectionConfig */
     protected $config;

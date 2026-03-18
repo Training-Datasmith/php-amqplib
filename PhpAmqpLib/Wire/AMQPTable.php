@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Exception;
 
 class AMQPTable extends AMQPAbstractCollection
 {
-
     final public function getType(): int
     {
         return self::T_TABLE;

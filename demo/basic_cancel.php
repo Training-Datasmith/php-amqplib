@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Helper\Protocol\Wait091;
 

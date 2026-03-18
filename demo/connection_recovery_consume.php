@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 include(__DIR__ . '/config.php');
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -18,14 +20,16 @@ const PORT3 = 5674;
     recovery and mulltiple hosts connection.
 */
 
-function connect() {
+function connect()
+{
     // If you want a better load-balancing, you cann reshuffle the list.
-    return AMQPStreamConnection::create_connection([
+    return AMQPStreamConnection::create_connection(
+        [
         ['host' => HOST, 'port' => PORT1, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
         ['host' => HOST, 'port' => PORT2, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
-        ['host' => HOST, 'port' => PORT3, 'user' => USER, 'password' => PASS, 'vhost' => VHOST]
+        ['host' => HOST, 'port' => PORT3, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
     ],
-    [
+        [
         'insist' => false,
         'login_method' => 'AMQPLAIN',
         'login_response' => null,
@@ -34,15 +38,17 @@ function connect() {
         'read_write_timeout' => 3.0,
         'context' => null,
         'keepalive' => false,
-        'heartbeat' => 0
-    ]);
+        'heartbeat' => 0,
+    ]
+    );
 }
 
-function cleanup_connection($connection): void {
+function cleanup_connection($connection): void
+{
     // Connection might already be closed.
     // Ignoring exceptions.
     try {
-        if($connection !== null) {
+        if ($connection !== null) {
             $connection->close();
         }
     } catch (\ErrorException $e) {
@@ -51,28 +57,29 @@ function cleanup_connection($connection): void {
 
 $connection = null;
 
-while(true){
+while (true) {
     try {
         $connection = connect();
         register_shutdown_function('shutdown', $connection);
         // Your application code goes here.
         do_something_with_connection($connection);
-    } catch(AMQPRuntimeException $e) {
+    } catch (AMQPRuntimeException $e) {
         echo $e->getMessage() . PHP_EOL;
         cleanup_connection($connection);
         usleep(WAIT_BEFORE_RECONNECT_uS);
-    } catch(\RuntimeException $e) {
+    } catch (\RuntimeException $e) {
         echo 'Runtime exception ' . PHP_EOL;
         cleanup_connection($connection);
         usleep(WAIT_BEFORE_RECONNECT_uS);
-    } catch(\ErrorException $e) {
+    } catch (\ErrorException $e) {
         echo 'Error exception ' . PHP_EOL;
         cleanup_connection($connection);
         usleep(WAIT_BEFORE_RECONNECT_uS);
     }
 }
 
-function do_something_with_connection($connection): void {
+function do_something_with_connection($connection): void
+{
     $queue = 'receive';
     $consumerTag = 'consumer';
     $channel = $connection->channel();
@@ -82,7 +89,6 @@ function do_something_with_connection($connection): void {
         $channel->wait();
     }
 }
-
 
 /**
  * @param \PhpAmqpLib\Message\AMQPMessage $message
@@ -108,5 +114,3 @@ function shutdown($connection): void
 {
     $connection->close();
 }
-
-

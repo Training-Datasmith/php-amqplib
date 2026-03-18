@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Connection;
 
 use PhpAmqpLib\Connection\AMQPConnectionConfig;
@@ -51,7 +53,7 @@ class AMQPConnectionConfigTest extends TestCase
     {
         $this->expectException(AMQPIOException::class);
 
-        $cert_dir = realpath(__DIR__ . "/../../certs");
+        $cert_dir = realpath(__DIR__ . '/../../certs');
         $config = new AMQPConnectionConfig();
         $config->setHost(HOST);
         $config->setPort(5671);
@@ -66,9 +68,9 @@ class AMQPConnectionConfigTest extends TestCase
         // CommonName is different make sure to not check
         $config->setSslVerifyName(false);
 
-        $config->setSslCaCert($cert_dir . "/ca_certificate.pem");
-        $config->setSslKey($cert_dir . "/client_key.pem");
-        $config->setSslCert($cert_dir . "/client_certificate.pem");
+        $config->setSslCaCert($cert_dir . '/ca_certificate.pem');
+        $config->setSslKey($cert_dir . '/client_key.pem');
+        $config->setSslCert($cert_dir . '/client_certificate.pem');
 
         AMQPConnectionFactory::create($config);
     }
@@ -78,7 +80,7 @@ class AMQPConnectionConfigTest extends TestCase
      */
     public function secure_with_correct_crypto_method()
     {
-        $cert_dir = realpath(__DIR__ . "/../../certs");
+        $cert_dir = realpath(__DIR__ . '/../../certs');
         $config = new AMQPConnectionConfig();
         $config->setHost(HOST);
         $config->setPort(5671);
@@ -86,9 +88,9 @@ class AMQPConnectionConfigTest extends TestCase
         $config->setPassword(PASS);
         $config->setVhost(VHOST);
 
-        $config->setSslCaCert($cert_dir . "/ca_certificate.pem");
-        $config->setSslKey($cert_dir . "/client_key.pem");
-        $config->setSslCert($cert_dir . "/client_certificate.pem");
+        $config->setSslCaCert($cert_dir . '/ca_certificate.pem');
+        $config->setSslKey($cert_dir . '/client_key.pem');
+        $config->setSslCert($cert_dir . '/client_certificate.pem');
 
         // setIsSecure now also set correct crypto method to tls
         $config->setIsSecure(true);
@@ -156,7 +158,7 @@ class AMQPConnectionConfigTest extends TestCase
         $this->expectExceptionMessage('AMQP protocol can be either "0.9.1" or "8.0"');
 
         $config = new AMQPConnectionConfig();
-        $protocol = "invalid_protocol";
+        $protocol = 'invalid_protocol';
         $config->setAMQPProtocol($protocol);
     }
 

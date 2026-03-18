@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Connection;
 
 use PhpAmqpLib\Exception;
@@ -69,7 +71,7 @@ class ConnectionUnresponsiveTest extends AbstractConnectionTest
                 $type,
                 $proxy->getHost(),
                 $proxy->getPort(),
-                array('timeout' => 3, 'connectionTimeout' => .1, 'heartbeat' => 1)
+                ['timeout' => 3, 'connectionTimeout' => .1, 'heartbeat' => 1]
             );
         } catch (\Exception $exception) {
         }

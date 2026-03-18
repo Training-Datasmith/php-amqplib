@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 include(__DIR__ . '/config.php');
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -16,7 +18,7 @@ $consumerTag = 'consumer';
  * @var AbstractConnection $connection
  */
 $connection = AMQPStreamConnection::create_connection([
-    ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS, 'vhost' => VHOST]
+    ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
 ], ['heartbeat' => 4]);
 
 $sender = new PCNTLHeartbeatSender($connection);

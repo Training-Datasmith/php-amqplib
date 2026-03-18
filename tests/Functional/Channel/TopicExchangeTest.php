@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Channel;
 
 use PhpAmqpLib\Connection\AMQPSocketConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Tests\Functional\Channel\ChannelTestCase;
 
 /**
  * @group connection

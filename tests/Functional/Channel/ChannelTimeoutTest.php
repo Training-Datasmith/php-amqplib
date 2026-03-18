@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Channel;
 
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AbstractConnection;
 use PhpAmqpLib\Exception\AMQPTimeoutException;
 use PhpAmqpLib\Helper\MiscHelper;
+use PhpAmqpLib\Tests\TestCaseCompat;
 use PhpAmqpLib\Wire\IO\AbstractIO;
 use PhpAmqpLib\Wire\IO\StreamIO;
-use PhpAmqpLib\Tests\TestCaseCompat;
 
 /**
  * @group connection
@@ -36,22 +38,22 @@ class ChannelTimeoutTest extends TestCaseCompat
     {
         $channel_rpc_timeout = 3.5;
 
-        list( $this->channel_rpc_timeout_seconds, $this->channel_rpc_timeout_microseconds ) =
+        list($this->channel_rpc_timeout_seconds, $this->channel_rpc_timeout_microseconds) =
             MiscHelper::splitSecondsMicroseconds($channel_rpc_timeout);
 
         $this->io = $this->getMockBuilder(StreamIO::class)
-            ->setConstructorArgs(array(HOST, PORT, 3, 3, null, false, 0))
-            ->setMethods(array('select'))
+            ->setConstructorArgs([HOST, PORT, 3, 3, null, false, 0])
+            ->setMethods(['select'])
             ->getMock();
         $this->io
             ->expects(self::atLeastOnce())
             ->method('select')
-            ->willReturnCallback(function(){
+            ->willReturnCallback(function () {
                 return $this->selectResult;
             });
         $this->connection = $this->getMockBuilder(AbstractConnection::class)
-            ->setConstructorArgs(array(USER, PASS, '/', false, 'AMQPLAIN', null, 'en_US', $this->io, 0, 0, $channel_rpc_timeout))
-            ->setMethods(array())
+            ->setConstructorArgs([USER, PASS, '/', false, 'AMQPLAIN', null, 'en_US', $this->io, 0, 0, $channel_rpc_timeout])
+            ->setMethods([])
             ->getMockForAbstractClass();
 
         $this->channel = $this->connection->channel();
@@ -75,16 +77,16 @@ class ChannelTimeoutTest extends TestCaseCompat
 
         // simulate blocking on the I/O level
         $this->selectResult = 0;
-        call_user_func_array(array($this->channel, $operation), $args);
+        call_user_func_array([$this->channel, $operation], $args);
     }
 
     public function provide_operations()
     {
-        return array(
-            array('exchange_declare', array('test_ex', 'fanout')),
-            array('queue_declare', array('test_queue')),
-            array('confirm_select', array()),
-        );
+        return [
+            ['exchange_declare', ['test_ex', 'fanout']],
+            ['queue_declare', ['test_queue']],
+            ['confirm_select', []],
+        ];
     }
 
     protected function tearDownCompat()

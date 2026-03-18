@@ -1,6 +1,7 @@
 <?php
 
-use PhpAmqpLib\Connection\AMQPConnection;
+declare(strict_types=1);
+
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
@@ -22,7 +23,6 @@ abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzab
 abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyza
 EOT;
 
-
 $time = microtime(true);
 
 $max = isset($argv[1]) ? (int) $argv[1] : 1;
@@ -31,7 +31,7 @@ $max = isset($argv[1]) ? (int) $argv[1] : 1;
 for ($i = 0; $i < $max; $i++) {
 
     $ch = $conn->channel();
-    list($queue,) = $ch->queue_declare('', false, false, true, true);
+    list($queue, ) = $ch->queue_declare('', false, false, true, true);
     $msg = new AMQPMessage($msg_body);
     $ch->basic_publish($msg, '', $queue);
     $ch->close();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire\IO;
 
 use PhpAmqpLib\Connection\AMQPConnectionConfig;

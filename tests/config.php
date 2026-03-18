@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 define('HOST', getenv('TEST_RABBITMQ_HOST') ? getenv('TEST_RABBITMQ_HOST') : 'localhost');
 define('HOST6', getenv('TEST_RABBITMQ_HOST6') ? getenv('TEST_RABBITMQ_HOST6') : '[::1]');
 define('PORT', getenv('TEST_RABBITMQ_PORT') ? getenv('TEST_RABBITMQ_PORT') : 5672);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Exception\AMQPDataReadException;
@@ -46,10 +48,10 @@ class AMQPBufferReader extends AMQPReader
     {
         if ($this->length < $n) {
             throw new AMQPDataReadException(sprintf(
-                                                'Error reading data. Requested %s bytes while string buffer has only %s',
-                                                $n,
-                                                $this->length
-                                            ));
+                'Error reading data. Requested %s bytes while string buffer has only %s',
+                $n,
+                $this->length
+            ));
         }
 
         $res = mb_substr($this->buffer, 0, $n, 'ASCII');

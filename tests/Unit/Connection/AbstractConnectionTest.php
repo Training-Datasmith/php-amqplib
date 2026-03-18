@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Connection;
 
 use PhpAmqpLib\Channel\Frame;
@@ -66,7 +68,7 @@ class AbstractConnectionTest extends TestCase
             $heartbeat = 0,
             $connectionTimeout = 0,
             $channelRpcTimeout = 0.0,
-            $config
+            $config,
         ];
 
         /** @var MockObject&AbstractConnection $connection */

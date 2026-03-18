@@ -1,6 +1,7 @@
 <?php
 
-use PhpAmqpLib\Connection\AMQPConnection;
+declare(strict_types=1);
+
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -17,16 +18,11 @@ $ch->queue_declare($queue, false, false, false, false);
 $ch->exchange_declare($exchange, 'direct', false, false, false);
 $ch->queue_bind($queue, $exchange);
 
-
-
 class Consumer
 {
-
     protected $msgCount = 0;
 
     protected $startTime;
-
-
 
     /**
      * @param \PhpAmqpLib\Message\AMQPMessage $msg
@@ -44,8 +40,6 @@ class Consumer
         $this->msgCount++;
     }
 }
-
-
 
 $ch->basic_consume($queue, '', false, true, false, false, [new Consumer(), 'process_message']);
 

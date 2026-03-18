@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Connection;
 
 use PhpAmqpLib\Connection\AMQPLazyConnection;
 use PhpAmqpLib\Connection\AMQPLazySocketConnection;
 use PhpAmqpLib\Connection\AMQPLazySSLConnection;
-use PhpAmqpLib\Connection\AMQPSocketConnection;
 use PhpAmqpLib\Tests\TestCaseCompat;
 
 class LazyConnectionTest extends TestCaseCompat

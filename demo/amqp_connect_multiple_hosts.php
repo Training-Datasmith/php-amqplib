@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 include(__DIR__ . '/config.php');
-use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Connection\AMQPSocketConnection;
 use PhpAmqpLib\Connection\AMQPSSLConnection;
+use PhpAmqpLib\Connection\AMQPStreamConnection;
 
 define('CERTS_PATH', '/git/rabbitmqinaction/av_scratchwork/openssl');
 
 $ssl_options = [
     'cafile' => CERTS_PATH . '/rmqca/cacert.pem',
     'local_cert' => CERTS_PATH . '/phpcert.pem',
-    'verify_peer' => true
+    'verify_peer' => true,
 ];
 
 /*
@@ -20,12 +22,13 @@ $ssl_options = [
     After reaching the end of the array, it will throw the last connection exception.
     Options will be mapped to constructor arguments for used connection type.
 */
-$connection = AMQPStreamConnection::create_connection([
+$connection = AMQPStreamConnection::create_connection(
+    [
     ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
     ['host' => HOST, 'port' => 5673, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
-    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST]
+    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
 ],
-[
+    [
     'insist' => false,
     'login_method' => 'AMQPLAIN',
     'login_response' => null,
@@ -34,25 +37,28 @@ $connection = AMQPStreamConnection::create_connection([
     'read_write_timeout' => 10.0,
     'context' => null,
     'keepalive' => false,
-    'heartbeat' => 5
-]);
-
+    'heartbeat' => 5,
+]
+);
 
 // Use empty options array for defaults
-$connection = AMQPStreamConnection::create_connection([
+$connection = AMQPStreamConnection::create_connection(
+    [
     ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
     ['host' => HOST, 'port' => 5673, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
-    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST]
+    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
 ],
-[]);
+    []
+);
 
 // Options keys are different for different connection types
-$connection = AMQPSocketConnection::create_connection([
+$connection = AMQPSocketConnection::create_connection(
+    [
     ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
     ['host' => HOST, 'port' => 5673, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
-    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST]
+    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
 ],
-[
+    [
     'insist' => false,
     'login_method' => 'AMQPLAIN',
     'login_response' => null,
@@ -60,29 +66,30 @@ $connection = AMQPSocketConnection::create_connection([
     'read_timeout' => 10,
     'keepalive' => false,
     'write_timeout' => 10,
-    'heartbeat' => 5
-]);
+    'heartbeat' => 5,
+]
+);
 
 // Use empty options array for defaults
 $connection = AMQPSocketConnection::create_connection([
     ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
     ['host' => HOST, 'port' => 5673, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
-    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST]
+    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
 ], []);
-
 
 /*
     For SSL connections you should set 'ssl_options' in the options array
 */
-$ssl_connection = AMQPSSLConnection::create_connection([
+$ssl_connection = AMQPSSLConnection::create_connection(
+    [
     ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
     ['host' => HOST, 'port' => 5673, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
-    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST]
+    ['host' => HOST, 'port' => 5674, 'user' => USER, 'password' => PASS, 'vhost' => VHOST],
 ],
-[
-    'ssl_options' => $ssl_options
-]);
-
+    [
+    'ssl_options' => $ssl_options,
+]
+);
 
 /**
  * @param \PhpAmqpLib\Connection\AbstractConnection $connection
@@ -94,4 +101,3 @@ function shutdown($connection): void
 
 register_shutdown_function('shutdown', $connection);
 register_shutdown_function('shutdown', $ssl_connection);
-

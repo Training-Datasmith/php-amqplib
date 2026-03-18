@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 require __DIR__ . '/config.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -14,14 +16,13 @@ if (empty($headers)) {
     exit(1);
 }
 
-
 $connection = new AMQPStreamConnection(HOST, PORT, USER, PASS, VHOST);
 $channel = $connection->channel();
 
 $exchangeName = 'topic_headers_test';
 $channel->exchange_declare($exchangeName, AMQPExchangeType::HEADERS);
 
-list($queueName, ,) = $channel->queue_declare('', false, false, true);
+list($queueName, , ) = $channel->queue_declare('', false, false, true);
 
 $bindArguments = [];
 foreach ($headers as $header) {

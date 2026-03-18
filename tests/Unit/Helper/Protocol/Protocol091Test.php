@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Helper\Protocol;
 
 use PhpAmqpLib\Helper\Protocol\Protocol091;

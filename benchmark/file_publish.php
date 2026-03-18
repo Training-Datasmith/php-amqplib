@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Usage:
  *  - Publish 100 5mb messages:

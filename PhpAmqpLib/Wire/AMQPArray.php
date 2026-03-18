@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire;
 
 class AMQPArray extends AMQPAbstractCollection
 {
-
     public function __construct(?array $data = null)
     {
         parent::__construct(empty($data) ? null : array_values($data));

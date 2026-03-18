@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Test;
 
 use PhpAmqpLib\Channel\AbstractChannel;
@@ -28,7 +30,8 @@ class TestChannel extends AMQPChannel
         $this->channel_rpc_timeout = $channel_rpc_timeout;
     }
 
-    public function close_connection(): void {
+    public function close_connection(): void
+    {
         $this->do_close();
     }
 }

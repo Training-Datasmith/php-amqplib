@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire\IO;
 
 use PhpAmqpLib\Exception\AMQPConnectionClosedException;
@@ -161,7 +163,7 @@ class StreamIO extends AbstractIO
         $options = stream_context_get_options($context);
         if (!empty($options['ssl']) && !isset($options['ssl']['crypto_method'])) {
             if (!stream_context_set_option($context, 'ssl', 'crypto_method', STREAM_CRYPTO_METHOD_ANY_CLIENT)) {
-                throw new AMQPIOException("Can not set ssl.crypto_method stream context option");
+                throw new AMQPIOException('Can not set ssl.crypto_method stream context option');
             }
         }
 
@@ -330,7 +332,7 @@ class StreamIO extends AbstractIO
             // fwrite notice that the stream isn't ready - EAGAIN or EWOULDBLOCK
             case $constants->SOCKET_EAGAIN:
             case $constants->SOCKET_EWOULDBLOCK:
-            // stream_select warning that it has been interrupted by a signal - EINTR
+                // stream_select warning that it has been interrupted by a signal - EINTR
             case $constants->SOCKET_EINTR:
                 return;
         }

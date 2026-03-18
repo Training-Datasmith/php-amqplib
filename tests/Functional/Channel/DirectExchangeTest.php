@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Channel;
 
 use PhpAmqpLib\Message\AMQPMessage;
-use PhpAmqpLib\Tests\Functional\Channel\ChannelTestCase;
 
 /**
  * @group connection
@@ -47,7 +48,7 @@ class DirectExchangeTest extends ChannelTestCase
     public function basic_consume_foo()
     {
         $this->channel->exchange_declare($this->exchange->name, 'direct', false, false, false);
-        list($this->queue->name, ,) = $this->channel->queue_declare();
+        list($this->queue->name, , ) = $this->channel->queue_declare();
         $this->channel->queue_bind($this->queue->name, $this->exchange->name, $this->queue->name);
 
         $this->message = (object) [

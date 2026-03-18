@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Connection\Heartbeat;
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -75,8 +78,8 @@ final class SIGHeartbeatSender extends AbstractSignalHeartbeatSender
     {
         $parent = getmypid();
         $pid = pcntl_fork();
-        if(!$pid) {
-            while (true){
+        if (!$pid) {
+            while (true) {
                 $slept = sleep($interval);
                 if ($slept !== 0) {
                     // interupted by signal from parent, exit immediately

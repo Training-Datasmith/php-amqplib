@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Connection\Heartbeat;
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -140,7 +142,6 @@ class PCNTLHeartbeatSenderTest extends AbstractConnectionTest
             ->method('isWriting')
             ->willReturn(false);
 
-
         $sender = new PCNTLHeartbeatSender($connection);
 
         $reflection = new \ReflectionClass($sender);
@@ -150,7 +151,6 @@ class PCNTLHeartbeatSenderTest extends AbstractConnectionTest
         $conn->setAccessible(true);
         $method = $reflection->getMethod('handleSignal');
         $method->setAccessible(true);
-
 
         $method->invoke($sender, 10);
         self::assertFalse($wasActive->getValue($sender));

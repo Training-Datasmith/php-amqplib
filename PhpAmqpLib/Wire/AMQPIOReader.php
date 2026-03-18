@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Exception\AMQPDataReadException;
@@ -112,9 +114,9 @@ class AMQPIOReader extends AMQPReader
         } while ($leftTime > 0);
 
         throw new AMQPTimeoutException(sprintf(
-                                           'The connection timed out after %s sec while awaiting incoming data',
-                                           $timeout
-                                       ));
+            'The connection timed out after %s sec while awaiting incoming data',
+            $timeout
+        ));
 
     }
 }

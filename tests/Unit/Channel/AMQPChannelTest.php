@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Channel;
 
 use PhpAmqpLib\Exception\AMQPChannelClosedException;
@@ -192,7 +194,7 @@ class AMQPChannelTest extends TestCase
                     'sleep',
                 ],
                 \InvalidArgumentException::class,
-            ]
+            ],
         ];
     }
 }

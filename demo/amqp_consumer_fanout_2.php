@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Run multiple instances of amqp_consumer_fanout_1.php and
 // amqp_consumer_fanout_2.php to test
 

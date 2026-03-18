@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Connection;
 
 use PhpAmqpLib\Tests\Functional\AbstractConnectionTest;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Connection\Heartbeat;
 
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -45,7 +47,7 @@ class SignalHeartbeatTest extends AbstractConnectionTest
         $this->sender = new PCNTLHeartbeatSender($this->connection);
         $this->channel = $this->connection->channel();
         $this->channel->exchange_declare($this->exchangeName, 'direct', false, false, false);
-        list($this->queueName, ,) = $this->channel->queue_declare();
+        list($this->queueName, , ) = $this->channel->queue_declare();
         $this->channel->queue_bind($this->queueName, $this->exchangeName, $this->queueName);
     }
 

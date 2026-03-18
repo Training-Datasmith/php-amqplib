@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Channel;
 
 use PhpAmqpLib\Message\AMQPMessage;
@@ -55,7 +57,7 @@ class HeadersExchangeTest extends ChannelTestCase
         $this->assertInstanceOf(AMQPMessage::class, $received2);
 
         // publish with not matching headers
-        $message->set('application_headers', new AMQPTable(array('foo' => false)));
+        $message->set('application_headers', new AMQPTable(['foo' => false]));
         $this->channel->basic_publish($message, $this->exchange->name);
 
         $received1 = $this->channel->basic_get($queue1, true);

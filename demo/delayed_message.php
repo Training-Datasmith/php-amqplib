@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Exchange\AMQPExchangeType;
 use PhpAmqpLib\Message\AMQPMessage;
@@ -23,7 +25,7 @@ $channel = $connection->channel();
  * @return mixed|null
  */
 $channel->exchange_declare('delayed_exchange', 'x-delayed-message', false, true, false, false, false, new AMQPTable([
-   'x-delayed-type' => AMQPExchangeType::FANOUT
+   'x-delayed-type' => AMQPExchangeType::FANOUT,
 ]));
 
 /**
@@ -40,7 +42,7 @@ $channel->exchange_declare('delayed_exchange', 'x-delayed-message', false, true,
  * @return mixed|null
  */
 $channel->queue_declare('delayed_queue', false, false, false, false, false, new AMQPTable([
-   'x-dead-letter-exchange' => 'delayed'
+   'x-dead-letter-exchange' => 'delayed',
 ]));
 
 $channel->queue_bind('delayed_queue', 'delayed_exchange');

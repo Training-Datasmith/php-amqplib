@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional;
 
 use Httpful\Request;
@@ -47,11 +49,11 @@ class ToxiProxy
      */
     public function open($host, $port, $listen)
     {
-        $payload = array(
+        $payload = [
             'name' => $this->name,
             'upstream' => $host . ':' . $port,
             'listen' => ':' . $listen,
-        );
+        ];
         $url = $this->api . '/proxies';
         $request = Request::post($url, json_encode($payload), 'json');
         $request->timeout(1);
@@ -72,7 +74,7 @@ class ToxiProxy
      * @param float $toxicity
      * @see https://github.com/Shopify/toxiproxy#toxics
      */
-    public function mode($type, $attributes = array(), $direction = 'upstream', $toxicity = 1.0)
+    public function mode($type, $attributes = [], $direction = 'upstream', $toxicity = 1.0)
     {
         $payload = [
             'name' => null,
@@ -99,7 +101,7 @@ class ToxiProxy
     public function disable()
     {
         $url = sprintf('%s/proxies/%s', $this->api, $this->name);
-        $response = Request::post($url, json_encode(array('enabled' => false)), 'json')->send();
+        $response = Request::post($url, json_encode(['enabled' => false]), 'json')->send();
         if ($response->code !== 200) {
             throw new \RuntimeException('Cannot disable Toxiproxy connection');
         }

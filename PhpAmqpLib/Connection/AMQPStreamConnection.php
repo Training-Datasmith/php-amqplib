@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Connection;
 
 use PhpAmqpLib\Wire\IO\StreamIO;

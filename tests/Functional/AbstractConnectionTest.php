@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional;
 
 use PhpAmqpLib\Channel\AbstractChannel;
@@ -18,7 +20,7 @@ abstract class AbstractConnectionTest extends TestCaseCompat
         string $type = 'stream',
         string $host = HOST,
         int $port = PORT,
-        array $options = array()
+        array $options = []
     ): AbstractConnection {
         $timeout = $options['timeout'] ?? 1;
         $lazy = $options['lazy'] ?? false;
@@ -60,7 +62,7 @@ abstract class AbstractConnectionTest extends TestCaseCompat
     protected function queue_bind(AMQPChannel $channel, $exchange_name, &$queue_name)
     {
         $channel->exchange_declare($exchange_name, AMQPExchangeType::DIRECT);
-        list($queue_name, ,) = $channel->queue_declare();
+        list($queue_name, , ) = $channel->queue_declare();
         $channel->queue_bind($queue_name, $exchange_name, $queue_name);
     }
 
@@ -138,6 +140,7 @@ abstract class AbstractConnectionTest extends TestCaseCompat
 }
 
 // mock low level IO write functions
+
 namespace PhpAmqpLib\Wire\IO;
 
 function fwrite()

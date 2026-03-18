@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Usage:
  * php spec/parser.php path.to.spec.json:
@@ -161,7 +163,6 @@ class ArgumentWriter
 
         return $ret;
     }
-
 
     public function write_bits(): string
     {
@@ -348,7 +349,9 @@ function get_type_phpdoc(string $type, $variableName = null, $returnType = null)
     return $properties . " */\n";
 }
 
-$properties = sprintf("const VERSION = '%s';", implode('.', array_filter([$json_spec['major-version'], $json_spec['minor-version'], @$json_spec['revision']], function ($value): bool {return $value !== null;})));
+$properties = sprintf("const VERSION = '%s';", implode('.', array_filter([$json_spec['major-version'], $json_spec['minor-version'], @$json_spec['revision']], function ($value): bool {
+    return $value !== null;
+})));
 $properties .= PHP_EOL;
 $properties .= 'const AMQP_HEADER = ' . protocol_header($json_spec) . ';';
 $properties .= PHP_EOL . PHP_EOL;
@@ -386,7 +389,7 @@ function method_waits(array $json_spec)
 
 $classBody = '';
 $classBody .= get_type_phpdoc('array');
-$classBody .= "protected \$wait = " . method_waits($json_spec) . ";\n\n";
+$classBody .= 'protected $wait = ' . method_waits($json_spec) . ";\n\n";
 $classBody .= get_type_phpdoc('string', '$method', 'string');
 $classBody .= 'public function get_wait($method)' . "\n{\n";
 $classBody .= indent('return $this->wait[$method];') . "\n";
@@ -409,7 +412,7 @@ function method_map(array $json_spec)
     $special_map = [
         '60,30' => 'basic_cancel_from_server',
         '60,80' => 'basic_ack_from_server',
-        '60,120' => 'basic_nack_from_server'
+        '60,120' => 'basic_nack_from_server',
     ];
 
     foreach ($json_spec['classes'] as $c) {

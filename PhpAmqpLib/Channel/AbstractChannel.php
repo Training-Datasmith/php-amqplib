@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Channel;
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -26,12 +28,12 @@ abstract class AbstractChannel
     /**
      * @deprecated
      */
-    const PROTOCOL_080 = Wire\Constants080::VERSION;
+    public const PROTOCOL_080 = Wire\Constants080::VERSION;
 
     /**
      * @deprecated
      */
-    const PROTOCOL_091 = Wire\Constants091::VERSION;
+    public const PROTOCOL_091 = Wire\Constants091::VERSION;
 
     /**
      * Lower level queue for frames

@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * - Start this consumer in one window by calling: php demo/basic_nack.php
  * - Then on a separate window publish a message like this: php demo/amqp_publisher.php good

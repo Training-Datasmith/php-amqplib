@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Connection;
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -37,9 +39,9 @@ class ConnectionClosedTest extends AbstractConnectionTest
     {
         $proxy = $this->create_proxy();
 
-        $options = array(
+        $options = [
             'keepalive' => $keepalive,
-        );
+        ];
         /** @var AbstractConnection $connection */
         $connection = $this->connection_create(
             $type,
@@ -53,7 +55,7 @@ class ConnectionClosedTest extends AbstractConnectionTest
 
         $exception = null;
         // block and close connection after delay
-        $proxy->mode('timeout', array('timeout' => 100));
+        $proxy->mode('timeout', ['timeout' => 100]);
         try {
             $channel->wait(null, false, 1);
         } catch (\Exception $exception) {
@@ -90,8 +92,6 @@ class ConnectionClosedTest extends AbstractConnectionTest
             $proxy->getHost(),
             $proxy->getPort()
         );
-
-
 
         $channel = $connection->channel();
         $this->assertTrue($channel->is_open());
@@ -239,7 +239,7 @@ class ConnectionClosedTest extends AbstractConnectionTest
             $type,
             $proxy->getHost(),
             $proxy->getPort(),
-            array('timeout' => $timeout)
+            ['timeout' => $timeout]
         );
 
         $channel = $connection->channel();
@@ -311,7 +311,7 @@ class ConnectionClosedTest extends AbstractConnectionTest
             $type,
             $proxy->getHost(),
             $proxy->getPort(),
-            array('timeout' => $timeout)
+            ['timeout' => $timeout]
         );
 
         $channel = $connection->channel();

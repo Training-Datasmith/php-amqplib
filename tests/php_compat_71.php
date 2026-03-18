@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -23,11 +25,13 @@ class TestCaseCompat extends TestCase
         parent::tearDown();
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $this->setUpCompat();
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         $this->tearDownCompat();
     }
 

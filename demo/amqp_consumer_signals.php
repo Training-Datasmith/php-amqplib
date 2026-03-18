@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PhpAmqpLib\Exchange\AMQPExchangeType;
 
 include(__DIR__ . '/config.php');
@@ -26,15 +28,15 @@ class Consumer
             pcntl_signal(SIGUSR2, [$this, 'signalHandler']);
             pcntl_signal(SIGALRM, [$this, 'alarmHandler']);
         } else {
-             echo 'Unable to process signals.' . PHP_EOL;
-             exit(1);
+            echo 'Unable to process signals.' . PHP_EOL;
+            exit(1);
         }
 
         $ssl = null;
         if (PORT === 5671) {
             $ssl = [
                 'verify_peer'      => false,
-                'verify_peer_name' => false
+                'verify_peer_name' => false,
             ];
         }
         $this->connection = new PhpAmqpLib\Connection\AMQPSSLConnection(
@@ -47,7 +49,7 @@ class Consumer
             [
                 'read_write_timeout' => 30,    // needs to be at least 2x heartbeat
                 'keepalive'          => false, // doesn't work with ssl connections
-                'heartbeat'          => 15
+                'heartbeat'          => 15,
             ]
         );
     }

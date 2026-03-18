@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Wire;
 
 abstract class Constants
 {
-    const VERSION = '';
-    const AMQP_HEADER = '';
+    public const VERSION = '';
+    public const AMQP_HEADER = '';
 
     /**
      * @var array<int, string>

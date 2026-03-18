@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional;
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -19,7 +21,7 @@ class StreamIOTest extends TestCase
     public function error_handler_is_restored_on_failed_connection()
     {
         $this->last_error = null;
-        set_error_handler(array($this, 'custom_error_handler'));
+        set_error_handler([$this, 'custom_error_handler']);
 
         error_reporting(~E_NOTICE);
 
@@ -45,7 +47,7 @@ class StreamIOTest extends TestCase
 
         error_reporting(E_ALL);
 
-        $previousErrorHandler = set_error_handler(array($this, 'custom_error_handler'));
+        $previousErrorHandler = set_error_handler([$this, 'custom_error_handler']);
         $this->assertSame('custom_error_handler', $previousErrorHandler[1]);
     }
 
@@ -54,11 +56,11 @@ class StreamIOTest extends TestCase
      */
     public function error_handler_is_restored_on_success()
     {
-        set_error_handler(array($this, 'custom_error_handler'));
+        set_error_handler([$this, 'custom_error_handler']);
 
         new AMQPStreamConnection(HOST, PORT, USER, PASS, VHOST);
 
-        $previousErrorHandler = set_error_handler(array($this, 'custom_error_handler'));
+        $previousErrorHandler = set_error_handler([$this, 'custom_error_handler']);
 
         $this->assertSame('custom_error_handler', $previousErrorHandler[1]);
     }

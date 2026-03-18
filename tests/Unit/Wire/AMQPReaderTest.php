@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Wire;
 
-use PhpAmqpLib\Wire;
-use PhpAmqpLib\Wire\AMQPBufferReader;
 use PhpAmqpLib\Tests\TestCaseCompat;
+use PhpAmqpLib\Wire;
 use PhpAmqpLib\Wire\AMQPAbstractCollection;
+use PhpAmqpLib\Wire\AMQPBufferReader;
 
 class AMQPReaderTest extends TestCaseCompat
 {
@@ -24,7 +26,7 @@ class AMQPReaderTest extends TestCaseCompat
     public function testReadBytes()
     {
         $expected = [
-            'snowman' => ['x', "\x26\x03"]
+            'snowman' => ['x', "\x26\x03"],
         ];
         $data = hex2bin('0000000f07736e6f776d616e78000000022603');
         $reader = new AMQPBufferReader($data);

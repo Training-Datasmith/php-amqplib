@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // Only one consumer per queue is allowed.
 // Set $queue name to test exclusiveness
 
@@ -24,7 +26,7 @@ $channel = $connection->channel();
     exclusive: true // the queue can not be accessed by other channels
     auto_delete: true // the queue will be deleted once the channel is closed.
 */
-list($queueName, ,) = $channel->queue_declare($queue, false, false, true, true);
+list($queueName, , ) = $channel->queue_declare($queue, false, false, true, true);
 
 /*
     name: $exchange

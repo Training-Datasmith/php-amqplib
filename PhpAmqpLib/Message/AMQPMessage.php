@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Message;
 
 use PhpAmqpLib\Channel\AMQPChannel;
@@ -12,8 +14,8 @@ use PhpAmqpLib\Wire\AMQPWriter;
  */
 class AMQPMessage
 {
-    const DELIVERY_MODE_NON_PERSISTENT = 1;
-    const DELIVERY_MODE_PERSISTENT = 2;
+    public const DELIVERY_MODE_NON_PERSISTENT = 1;
+    public const DELIVERY_MODE_PERSISTENT = 2;
 
     /**
      * @var string
@@ -496,7 +498,6 @@ class AMQPMessage
 
         return $this;
     }
-
 
     /**
      * Serializes the 'properties' attribute (a dictionary) into the

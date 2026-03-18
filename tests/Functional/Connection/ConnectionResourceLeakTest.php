@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Functional\Connection;
 
 use PhpAmqpLib\Connection\AbstractConnection;

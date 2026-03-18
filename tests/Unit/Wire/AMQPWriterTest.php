@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit\Wire;
 
 use PhpAmqpLib\Exception\AMQPOutOfRangeException;
+use PhpAmqpLib\Tests\TestCaseCompat;
 use PhpAmqpLib\Wire;
+use PhpAmqpLib\Wire\AMQPAbstractCollection;
 use PhpAmqpLib\Wire\AMQPArray;
 use PhpAmqpLib\Wire\AMQPTable;
 use PhpAmqpLib\Wire\AMQPWriter;
-use PhpAmqpLib\Tests\TestCaseCompat;
-use PhpAmqpLib\Wire\AMQPAbstractCollection;
 
 class AMQPWriterTest extends TestCaseCompat
 {
@@ -23,7 +25,7 @@ class AMQPWriterTest extends TestCaseCompat
             'rabbit@localhost',
             'hare@localhost',
             42,
-            true
+            true,
         ]);
         $out = $writer->getvalue();
         $expected = "\x00\x00\x00\x2fS\x00\x00\x00\x10rabbit@localhostS\x00\x00\x00\x0Ehare@localhostI\x00\x00\x00\x2at\x01";
@@ -44,7 +46,7 @@ class AMQPWriterTest extends TestCaseCompat
                     'rabbit@localhost',
                     'hare@localhost',
                     42,
-                    true
+                    true,
             ])
         );
 
@@ -72,7 +74,7 @@ class AMQPWriterTest extends TestCaseCompat
             'x-short' => ['U', -1024],
             'x-short-u' => ['u', 125],
             'x-short-str' => ['s', 'foo'],
-            'x-bytes' => array('x', 'foobar'),
+            'x-bytes' => ['x', 'foobar'],
         ]);
         $out = $writer->getvalue();
         $expected = "\x00\x00\x00\xa3\x05x-fooS\x00\x00\x00\x03bar\x05x-barA\x00\x00\x00\x10S\x00\x00\x00\x03bazS\x00\x00\x00\x03qux\x05x-bazI\x00\x00\x00\x2a\x06x-truet\x01\x07x-falset\x00" .

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Unit;
 
 use PhpAmqpLib\Tests\TestCaseCompat;
@@ -327,11 +329,11 @@ class WireTest extends TestCaseCompat
                         'baz' => 'boo',
                         'bool' => true,
                         'tbl' => ['bar' => 'baz'],
-                        'arr' => ['boo', false, 5]
+                        'arr' => ['boo', false, 5],
                     ],
                     [1 => 5, 3 => 'foo', 786 => 674],
                     [1, [2, [3, [4]]]],
-                    ['i' => 1, 'n' => ['i' => 2, 'n' => ['i' => 3, 'n' => ['i' => 4]]]]
+                    ['i' => 1, 'n' => ['i' => 2, 'n' => ['i' => 3, 'n' => ['i' => 4]]]],
                 ]
             )
         );
@@ -356,11 +358,11 @@ class WireTest extends TestCaseCompat
                     'baz' => 'boo',
                     'bool' => true,
                     'tbl' => ['bar' => 'baz'],
-                    'arr' => ['boo', false, 5]
+                    'arr' => ['boo', false, 5],
                 ],
                 [1 => 5, 3 => 'foo', 786 => 674],
                 [1, [2, [3, [4]]]],
-                ['i' => 1, 'n' => ['i' => 2, 'n' => ['i' => 3, 'n' => ['i' => 4]]]]
+                ['i' => 1, 'n' => ['i' => 2, 'n' => ['i' => 3, 'n' => ['i' => 4]]]],
             ],
             $r->read_array(true)->getNativeData()
         );
@@ -417,7 +419,7 @@ class WireTest extends TestCaseCompat
                         'baz' => 'boo',
                         'bool' => true,
                         'tbl' => ['bar' => 'baz'],
-                        'arr' => ['boo', false, 5]
+                        'arr' => ['boo', false, 5],
                     ],
                     'table_num' => [1 => 5, 3 => 'foo', 786 => 674],
                     'array_nested' => [1, [2, [3, [4]]]],
@@ -449,14 +451,14 @@ class WireTest extends TestCaseCompat
                     'baz' => 'boo',
                     'bool' => true,
                     'tbl' => ['bar' => 'baz'],
-                    'arr' => ['boo', false, 5]
+                    'arr' => ['boo', false, 5],
                 ],
                 'table_num' => [1 => 5, 3 => 'foo', 786 => 674],
                 'array_nested' => [1, [2, [3, [4]]]],
                 'table_nested' => [
                     'i' => 1,
-                    'n' => ['i' => 2, 'n' => ['i' => 3, 'n' => ['i' => 4]]]
-                ]
+                    'n' => ['i' => 2, 'n' => ['i' => 3, 'n' => ['i' => 4]]],
+                ],
             ],
             $r->read_table(true)->getNativeData()
         );
@@ -633,8 +635,8 @@ class WireTest extends TestCaseCompat
             [
                 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz' .
                 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz' .
-                'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz'
-            ]
+                'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz',
+            ],
         ];
     }
 

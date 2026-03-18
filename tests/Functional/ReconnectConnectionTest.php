@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional;
 
 use PhpAmqpLib\Connection\AMQPLazyConnection;
@@ -146,7 +148,7 @@ class ReconnectConnectionTest extends TestCaseCompat
             'content_type' => 'text/plain',
             'delivery_mode' => AMQPMessage::DELIVERY_MODE_NON_PERSISTENT,
             'correlation_id' => 'my_correlation_id',
-            'reply_to' => 'my_reply_to'
+            'reply_to' => 'my_reply_to',
         ]);
         $this->channel->basic_publish($msg, $this->exchange, $this->queue);
 

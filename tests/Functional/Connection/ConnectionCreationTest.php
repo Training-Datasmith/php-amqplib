@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Tests\Functional\Connection;
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -15,20 +17,20 @@ class ConnectionCreationTest extends AbstractConnectionTest
 {
     public function hostDataProvider(): array
     {
-        return array(
-            'plain' => array(
-                array(
-                    array('host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS),
-                    array('host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS)
-                )
-            ),
-            'keys' => array(
-                array(
-                    'host1' => array('host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS),
-                    'host2' => array('host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS)
-                )
-            )
-        );
+        return [
+            'plain' => [
+                [
+                    ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS],
+                    ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS],
+                ],
+            ],
+            'keys' => [
+                [
+                    'host1' => ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS],
+                    'host2' => ['host' => HOST, 'port' => PORT, 'user' => USER, 'password' => PASS],
+                ],
+            ],
+        ];
     }
 
     /**

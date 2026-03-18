@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PhpAmqpLib\Connection;
 
 use PhpAmqpLib\Channel\AbstractChannel;
@@ -41,9 +43,9 @@ abstract class AbstractConnection extends AbstractChannel
                 'consumer_cancel_notify' => ['t', true],
                 'exchange_exchange_bindings' => ['t', true],
                 'basic.nack' => ['t', true],
-                'connection.blocked' => ['t', true]
-            ]
-        ]
+                'connection.blocked' => ['t', true],
+            ],
+        ],
     ];
 
     /**
@@ -214,7 +216,7 @@ abstract class AbstractConnection extends AbstractChannel
                 $login_response = new AMQPWriter();
                 $login_response->write_table([
                     'LOGIN' => ['S', $user],
-                    'PASSWORD' => ['S', $password]
+                    'PASSWORD' => ['S', $password],
                 ]);
 
                 // Skip the length
@@ -272,7 +274,7 @@ abstract class AbstractConnection extends AbstractChannel
                 while ($this->wait_tune_ok) {
                     $this->wait([
                         $this->waitHelper->get_wait('connection.secure'),
-                        $this->waitHelper->get_wait('connection.tune')
+                        $this->waitHelper->get_wait('connection.tune'),
                     ], false, $this->connection_timeout);
                 }
 
@@ -499,7 +501,6 @@ abstract class AbstractConnection extends AbstractChannel
         $pkt->write($packed_properties);
 
         $pkt->write_octet(0xCE);
-
 
         // memory efficiency: walk the string instead of biting
         // it. good for very large packets (close in size to
@@ -802,7 +803,7 @@ abstract class AbstractConnection extends AbstractChannel
         $this->send_method_frame([10, 40], $args);
 
         $wait = [
-            $this->waitHelper->get_wait('connection.open_ok')
+            $this->waitHelper->get_wait('connection.open_ok'),
         ];
 
         if ($this->protocolVersion === Wire\Constants080::VERSION) {
