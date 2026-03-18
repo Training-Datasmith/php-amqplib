@@ -46,7 +46,7 @@ class AMQPDecimal
     {
         $n = new BigInteger($this->n);
         $e = new BigInteger('1' . str_repeat('0', $this->e));
-        list($q) = $n->divide($e);
+        [$q] = $n->divide($e);
         return $q->toString();
     }
 

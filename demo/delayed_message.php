@@ -22,9 +22,9 @@ $channel = $connection->channel();
  * @param bool $nowait
  * @return mixed|null
  */
-$channel->exchange_declare('delayed_exchange', 'x-delayed-message', false, true, false, false, false, new AMQPTable(array(
+$channel->exchange_declare('delayed_exchange', 'x-delayed-message', false, true, false, false, false, new AMQPTable([
    'x-delayed-type' => AMQPExchangeType::FANOUT
-)));
+]));
 
 /**
  * Declares queue, creates if needed
@@ -39,18 +39,18 @@ $channel->exchange_declare('delayed_exchange', 'x-delayed-message', false, true,
  * @param null $ticket
  * @return mixed|null
  */
-$channel->queue_declare('delayed_queue', false, false, false, false, false, new AMQPTable(array(
+$channel->queue_declare('delayed_queue', false, false, false, false, false, new AMQPTable([
    'x-dead-letter-exchange' => 'delayed'
-)));
+]));
 
 $channel->queue_bind('delayed_queue', 'delayed_exchange');
 
-$headers = new AMQPTable(array('x-delay' => 7000));
-$message = new AMQPMessage('hello', array('delivery_mode' => 2));
+$headers = new AMQPTable(['x-delay' => 7000]);
+$message = new AMQPMessage('hello', ['delivery_mode' => 2]);
 $message->set('application_headers', $headers);
 $channel->basic_publish($message, 'delayed_exchange');
 
-function process_message(AMQPMessage $message)
+function process_message(AMQPMessage $message): void
 {
     $headers = $message->get('application_headers');
     $nativeData = $headers->getNativeData();
@@ -74,7 +74,7 @@ $channel->basic_consume('delayed_queue', '', false, false, false, false, 'proces
  * @param \PhpAmqpLib\Channel\AMQPChannel $channel
  * @param \PhpAmqpLib\Connection\AbstractConnection $connection
  */
-function shutdown($channel, $connection)
+function shutdown($channel, $connection): void
 {
     $channel->close();
     $connection->close();

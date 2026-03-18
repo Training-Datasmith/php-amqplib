@@ -20,7 +20,7 @@ abstract class AMQPByteStream
     protected const PLATFORM_64BIT = PHP_INT_SIZE === 8;
 
     /** @var BigInteger[][] */
-    protected static $bigIntegers = array();
+    protected static $bigIntegers = [];
 
     /**
      * @var bool
@@ -86,7 +86,7 @@ abstract class AMQPByteStream
     protected static function getBigInteger($value, $base = 10)
     {
         if (!isset(self::$bigIntegers[$base])) {
-            self::$bigIntegers[$base] = array();
+            self::$bigIntegers[$base] = [];
         }
         if (isset(self::$bigIntegers[$base][$value])) {
             return self::$bigIntegers[$base][$value];

@@ -15,7 +15,6 @@ class AMQPSSLConnection extends AMQPStreamConnection
      * @param string $vhost
      * @param array $ssl_options
      * @param array $options
-     * @param AMQPConnectionConfig|null $config
      * @throws \Exception
      */
     public function __construct(
@@ -24,8 +23,8 @@ class AMQPSSLConnection extends AMQPStreamConnection
         $user,
         $password,
         $vhost = '/',
-        $ssl_options = array(),
-        $options = array(),
+        $ssl_options = [],
+        $options = [],
         ?AMQPConnectionConfig $config = null
     ) {
         trigger_error('AMQPSSLConnection is deprecated and will be removed in version 4 of php-amqplib', E_USER_DEPRECATED);
@@ -40,16 +39,16 @@ class AMQPSSLConnection extends AMQPStreamConnection
             $user,
             $password,
             $vhost,
-            isset($options['insist']) ? $options['insist'] : false,
-            isset($options['login_method']) ? $options['login_method'] : 'AMQPLAIN',
-            isset($options['login_response']) ? $options['login_response'] : null,
-            isset($options['locale']) ? $options['locale'] : 'en_US',
-            isset($options['connection_timeout']) ? $options['connection_timeout'] : 3,
-            isset($options['read_write_timeout']) ? $options['read_write_timeout'] : 130,
+            $options['insist'] ?? false,
+            $options['login_method'] ?? 'AMQPLAIN',
+            $options['login_response'] ?? null,
+            $options['locale'] ?? 'en_US',
+            $options['connection_timeout'] ?? 3,
+            $options['read_write_timeout'] ?? 130,
             $ssl_context,
-            isset($options['keepalive']) ? $options['keepalive'] : false,
-            isset($options['heartbeat']) ? $options['heartbeat'] : 0,
-            isset($options['channel_rpc_timeout']) ? $options['channel_rpc_timeout'] : 0.0,
+            $options['keepalive'] ?? false,
+            $options['heartbeat'] ?? 0,
+            $options['channel_rpc_timeout'] ?? 0.0,
             $config
         );
     }
@@ -58,9 +57,9 @@ class AMQPSSLConnection extends AMQPStreamConnection
      * @deprecated Use AmqpConnectionFactory
      * @throws \Exception
      */
-    public static function try_create_connection($host, $port, $user, $password, $vhost, $options)
+    public static function try_create_connection($host, $port, $user, $password, $vhost, $options): self
     {
-        $ssl_options = isset($options['ssl_options']) ? $options['ssl_options'] : [];
+        $ssl_options = $options['ssl_options'] ?? [];
         return new static($host, $port, $user, $password, $vhost, $ssl_options, $options);
     }
 

@@ -12,7 +12,7 @@ final class Constants091 extends Constants
     /**
      * @var array
      */
-    public static $FRAME_TYPES = array(
+    public static $FRAME_TYPES = [
         1 => 'FRAME-METHOD',
         2 => 'FRAME-HEADER',
         3 => 'FRAME-BODY',
@@ -20,30 +20,30 @@ final class Constants091 extends Constants
         4096 => 'FRAME-MIN-SIZE',
         206 => 'FRAME-END',
         501 => 'FRAME-ERROR',
-    );
+    ];
 
     /**
      * @var array
      */
-    public static $CONTENT_METHODS = array(
+    public static $CONTENT_METHODS = [
         0 => '60,40',
         1 => '60,50',
         2 => '60,60',
         3 => '60,71',
-    );
+    ];
 
     /**
      * @var array
      */
-    public static $CLOSE_METHODS = array(
+    public static $CLOSE_METHODS = [
         0 => '10,50',
         1 => '20,40',
-    );
+    ];
 
     /**
      * @var array
      */
-    public static $GLOBAL_METHOD_NAMES = array(
+    public static $GLOBAL_METHOD_NAMES = [
         '10,10' => 'Connection.start',
         '10,11' => 'Connection.start_ok',
         '10,20' => 'Connection.secure',
@@ -108,5 +108,5 @@ final class Constants091 extends Constants
         '90,31' => 'Tx.rollback_ok',
         '85,10' => 'Confirm.select',
         '85,11' => 'Confirm.select_ok',
-    );
+    ];
 }

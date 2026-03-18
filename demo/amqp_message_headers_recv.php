@@ -25,7 +25,7 @@ list($queueName, ,) = $channel->queue_declare('', false, false, true);
 
 $bindArguments = [];
 foreach ($headers as $header) {
-    list ($key, $value) = explode('=', $header, 2);
+    [$key, $value] = explode('=', $header, 2);
     $bindArguments[$key] = $value;
 }
 
@@ -33,7 +33,7 @@ $channel->queue_bind($queueName, $exchangeName, '', false, new AMQPTable($bindAr
 
 echo ' [*] Waiting for logs. To exit press CTRL+C', "\n";
 
-$callback = function (AMQPMessage $message) {
+$callback = function (AMQPMessage $message): void {
     echo PHP_EOL . ' [x] ', $message->getRoutingKey(), ':', $message->getBody(), "\n";
     echo 'Message headers follows' . PHP_EOL;
     var_dump($message->get('application_headers')->getNativeData());

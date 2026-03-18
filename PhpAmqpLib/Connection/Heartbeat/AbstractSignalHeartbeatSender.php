@@ -21,7 +21,6 @@ abstract class AbstractSignalHeartbeatSender
     protected $wasActive = false;
 
     /**
-     * @param AbstractConnection $connection
      * @throws AMQPRuntimeException
      */
     public function __construct(AbstractConnection $connection)
@@ -38,9 +37,6 @@ abstract class AbstractSignalHeartbeatSender
         $this->unregister();
     }
 
-    /**
-     * @return bool
-     */
     protected function isSupported(): bool
     {
         return extension_loaded('pcntl')
@@ -60,8 +56,6 @@ abstract class AbstractSignalHeartbeatSender
 
     /**
      * Handles the heartbeat when a signal interrupt is received
-     *
-     * @param int $interval
      */
     protected function handleSignal(int $interval): void
     {

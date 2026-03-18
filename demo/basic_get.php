@@ -38,7 +38,7 @@ $channel->exchange_declare($exchange, AMQPExchangeType::DIRECT, false, true, fal
 
 $channel->queue_bind($queue, $exchange);
 
-$toSend = new AMQPMessage('test message', array('content_type' => 'text/plain', 'delivery_mode' => 2));
+$toSend = new AMQPMessage('test message', ['content_type' => 'text/plain', 'delivery_mode' => 2]);
 $channel->basic_publish($toSend, $exchange);
 
 $message = $channel->basic_get($queue);

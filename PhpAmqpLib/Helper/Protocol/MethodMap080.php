@@ -9,7 +9,7 @@ class MethodMap080
     /**
      * @var array
      */
-    protected $method_map = array(
+    protected $method_map = [
         '10,10' => 'connection_start',
         '10,11' => 'connection_start_ok',
         '10,20' => 'connection_secure',
@@ -103,7 +103,7 @@ class MethodMap080
         '120,31' => 'test_table_ok',
         '120,40' => 'test_content',
         '120,41' => 'test_content_ok',
-    );
+    ];
 
     /**
      * @var string $method_sig
@@ -116,9 +116,8 @@ class MethodMap080
 
     /**
      * @var string $method_sig
-     * @return bool
      */
-    public function valid_method($method_sig)
+    public function valid_method($method_sig): bool
     {
         return array_key_exists($method_sig, $this->method_map);
     }

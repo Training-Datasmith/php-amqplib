@@ -42,14 +42,12 @@ class AMQPIOReader extends AMQPReader
      *
      * @param int|float|null $timeout
      */
-    public function setTimeout($timeout)
+    public function setTimeout($timeout): void
     {
         $this->timeout = $timeout;
     }
 
     /**
-     * @param int $n
-     * @return string
      * @throws RuntimeException
      * @throws AMQPDataReadException|AMQPNoDataException|AMQPIOException
      */

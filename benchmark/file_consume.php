@@ -27,14 +27,14 @@ class FileConsumer
 
     protected $msgCount = 0;
 
-    protected $startTime = null;
+    protected $startTime;
 
 
 
     /**
      * @param \PhpAmqpLib\Message\AMQPMessage $msg
      */
-    public function process_message($msg)
+    public function process_message($msg): void
     {
         if ($this->startTime === null) {
             $this->startTime = microtime(true);
@@ -50,9 +50,9 @@ class FileConsumer
 
 
 
-$ch->basic_consume($queue, '', false, true, false, false, array(new FileConsumer(), 'process_message'));
+$ch->basic_consume($queue, '', false, true, false, false, [new FileConsumer(), 'process_message']);
 
-function shutdown($ch, $conn)
+function shutdown($ch, $conn): void
 {
     $ch->close();
     $conn->close();

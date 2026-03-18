@@ -37,7 +37,7 @@ final class PCNTLHeartbeatSender extends AbstractSignalHeartbeatSender
 
     private function registerListener(int $interval): void
     {
-        pcntl_signal(SIGALRM, function () use ($interval) {
+        pcntl_signal(SIGALRM, function () use ($interval): void {
             $this->handleSignal($interval);
             if ($this->connection) {
                 pcntl_alarm($interval);

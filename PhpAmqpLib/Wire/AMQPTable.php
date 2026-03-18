@@ -7,10 +7,7 @@ use PhpAmqpLib\Exception;
 class AMQPTable extends AMQPAbstractCollection
 {
 
-    /**
-     * @return int
-     */
-    final public function getType()
+    final public function getType(): int
     {
         return self::T_TABLE;
     }
@@ -20,7 +17,7 @@ class AMQPTable extends AMQPAbstractCollection
      * @param mixed $val
      * @param int|null $type
      */
-    public function set($key, $val, $type = null)
+    public function set($key, $val, $type = null): void
     {
         //https://www.rabbitmq.com/resources/specs/amqp0-9-1.pdf, https://www.rabbitmq.com/resources/specs/amqp0-8.pdf
         //Field names MUST start with a letter, '$' or '#' and may continue with letters, '$' or '#', digits,

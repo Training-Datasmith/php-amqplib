@@ -38,7 +38,7 @@ function connect() {
     ]);
 }
 
-function cleanup_connection($connection) {
+function cleanup_connection($connection): void {
     // Connection might already be closed.
     // Ignoring exceptions.
     try {
@@ -72,7 +72,7 @@ while(true){
     }
 }
 
-function do_something_with_connection($connection) {
+function do_something_with_connection($connection): void {
     $queue = 'receive';
     $consumerTag = 'consumer';
     $channel = $connection->channel();
@@ -87,7 +87,7 @@ function do_something_with_connection($connection) {
 /**
  * @param \PhpAmqpLib\Message\AMQPMessage $message
  */
-function process_message($message)
+function process_message($message): void
 {
     echo "\n--------\n";
     echo $message->body;
@@ -104,7 +104,7 @@ function process_message($message)
 /**
  * @param \PhpAmqpLib\Connection\AbstractConnection $connection
  */
-function shutdown($connection)
+function shutdown($connection): void
 {
     $connection->close();
 }

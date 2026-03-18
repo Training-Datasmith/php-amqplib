@@ -33,8 +33,6 @@ class AMQPBufferReader extends AMQPReader
      * when we can just pass a string and reset the object state.
      * NOTE: since we are working with strings we don't need to pass an AbstractIO
      *       or a timeout.
-     *
-     * @param string $str
      */
     public function reset(string $str): void
     {

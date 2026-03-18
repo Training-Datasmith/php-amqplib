@@ -68,16 +68,16 @@ class AMQPMessage
      * @internal
      * @deprecated Will be removed in version 4.0, use one of getters to get delivery info.
      */
-    public $delivery_info = array();
+    public $delivery_info = [];
 
     /** @var array Properties content */
-    protected $properties = array();
+    protected $properties = [];
 
     /** @var null|string Compiled properties */
     protected $serialized_properties;
 
     /** @var array */
-    protected static $propertyDefinitions = array(
+    protected static $propertyDefinitions = [
         'content_type' => 'shortstr',
         'content_encoding' => 'shortstr',
         'application_headers' => 'table_object',
@@ -92,13 +92,13 @@ class AMQPMessage
         'user_id' => 'shortstr',
         'app_id' => 'shortstr',
         'cluster_id' => 'shortstr',
-    );
+    ];
 
     /**
      * @param string $body
      * @param array $properties
      */
-    public function __construct($body = '', $properties = array())
+    public function __construct($body = '', $properties = [])
     {
         $this->setBody($body);
 
@@ -115,7 +115,7 @@ class AMQPMessage
      * @since 2.12.0
      * @link https://www.rabbitmq.com/amqp-0-9-1-reference.html#basic.ack
      */
-    public function ack($multiple = false)
+    public function ack($multiple = false): void
     {
         $this->assertUnacked();
         $this->channel->basic_ack($this->deliveryTag, $multiple);
@@ -132,7 +132,7 @@ class AMQPMessage
      * @since 2.12.0
      * @link https://www.rabbitmq.com/amqp-0-9-1-reference.html#basic.nack
      */
-    public function nack($requeue = false, $multiple = false)
+    public function nack($requeue = false, $multiple = false): void
     {
         $this->assertUnacked();
         $this->channel->basic_nack($this->deliveryTag, $multiple, $requeue);
@@ -147,7 +147,7 @@ class AMQPMessage
      * @since 2.12.0
      * @link https://www.rabbitmq.com/amqp-0-9-1-reference.html#basic.reject
      */
-    public function reject($requeue = true)
+    public function reject($requeue = true): void
     {
         $this->assertUnacked();
         $this->channel->basic_reject($this->deliveryTag, $requeue);
@@ -184,7 +184,7 @@ class AMQPMessage
      * @throws \RuntimeException
      * @since 2.12.0
      */
-    public function setChannel($channel)
+    public function setChannel($channel): self
     {
         if ($this->channel) {
             throw new \RuntimeException('A message is already assigned to channel');
@@ -203,7 +203,7 @@ class AMQPMessage
      * @return $this
      * @since 2.12.0
      */
-    public function setDeliveryInfo($deliveryTag, $redelivered, $exchange, $routingKey)
+    public function setDeliveryInfo($deliveryTag, $redelivered, $exchange, $routingKey): self
     {
         $this->deliveryTag = $this->delivery_info['delivery_tag'] = $deliveryTag;
         $this->redelivered = $this->delivery_info['redelivered'] = $redelivered;
@@ -254,7 +254,7 @@ class AMQPMessage
      * @return $this
      * @since 2.12.0
      */
-    public function setConsumerTag($consumerTag)
+    public function setConsumerTag($consumerTag): self
     {
         $this->consumerTag = $consumerTag;
         $this->delivery_info['consumer_tag'] = $consumerTag;
@@ -276,7 +276,7 @@ class AMQPMessage
      * @return $this
      * @since 2.12.0
      */
-    public function setMessageCount($messageCount)
+    public function setMessageCount($messageCount): self
     {
         $this->messageCount = (int)$messageCount;
         $this->delivery_info['message_count'] = $this->messageCount;
@@ -298,7 +298,7 @@ class AMQPMessage
      * @param string $body
      * @return $this
      */
-    public function setBody($body)
+    public function setBody($body): self
     {
         $this->body = $body;
 
@@ -323,9 +323,8 @@ class AMQPMessage
 
     /**
      * @param int $body_size Message body size in byte(s)
-     * @return AMQPMessage
      */
-    public function setBodySize($body_size)
+    public function setBodySize($body_size): self
     {
         $this->body_size = (int)$body_size;
 
@@ -342,9 +341,8 @@ class AMQPMessage
 
     /**
      * @param bool $is_truncated
-     * @return AMQPMessage
      */
-    public function setIsTruncated($is_truncated)
+    public function setIsTruncated($is_truncated): self
     {
         $this->is_truncated = (bool)$is_truncated;
 
@@ -356,7 +354,7 @@ class AMQPMessage
      * @return $this
      * @since 2.12.0
      */
-    public function setDeliveryTag($deliveryTag)
+    public function setDeliveryTag($deliveryTag): self
     {
         if (!empty($this->deliveryTag)) {
             throw new \LogicException('Delivery tag cannot be changed');
@@ -386,9 +384,8 @@ class AMQPMessage
      * or if present - in the 'delivery_info' dictionary.
      *
      * @param string $name
-     * @return bool
      */
-    public function has($name)
+    public function has($name): bool
     {
         return isset($this->properties[$name]) || isset($this->delivery_info[$name]);
     }
@@ -434,7 +431,7 @@ class AMQPMessage
      * @param mixed $value The property value
      * @throws \OutOfBoundsException
      */
-    public function set($name, $value)
+    public function set($name, $value): void
     {
         if (!array_key_exists($name, self::$propertyDefinitions)) {
             throw new \OutOfBoundsException(sprintf(
@@ -462,10 +459,10 @@ class AMQPMessage
      * NOTE: do not mutate $reader
      * @return $this
      */
-    public function load_properties(AMQPReader $reader)
+    public function load_properties(AMQPReader $reader): self
     {
         // Read 16-bit shorts until we get one with a low bit set to zero
-        $flags = array();
+        $flags = [];
 
         while (true) {
             $flag_bits = $reader->read_short();
@@ -477,7 +474,7 @@ class AMQPMessage
         }
 
         $shift = 0;
-        $data = array();
+        $data = [];
 
         foreach (self::$propertyDefinitions as $key => $proptype) {
             if ($shift === 0) {
@@ -517,11 +514,11 @@ class AMQPMessage
 
         $shift = 15;
         $flag_bits = 0;
-        $flags = array();
+        $flags = [];
         $raw_bytes = new AMQPWriter();
 
         foreach (self::$propertyDefinitions as $key => $prototype) {
-            $val = isset($this->properties[$key]) ? $this->properties[$key] : null;
+            $val = $this->properties[$key] ?? null;
 
             // Very important: PHP type eval is weak, use the === to test the
             // value content. Zero or false value should not be removed

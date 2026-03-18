@@ -41,7 +41,7 @@ $channel->queue_bind($queueName, $exchange);
 /**
  * @param \PhpAmqpLib\Message\AMQPMessage $message
  */
-function process_message($message)
+function process_message($message): void
 {
     echo "\n--------\n";
     echo $message->body;
@@ -72,7 +72,7 @@ $channel->basic_consume($queueName, $consumerTag, false, false, true, false, 'pr
  * @param \PhpAmqpLib\Channel\AMQPChannel $channel
  * @param \PhpAmqpLib\Connection\AbstractConnection $connection
  */
-function shutdown($channel, $connection)
+function shutdown($channel, $connection): void
 {
     $channel->close();
     $connection->close();

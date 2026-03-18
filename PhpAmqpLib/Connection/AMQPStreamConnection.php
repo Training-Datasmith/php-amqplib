@@ -23,7 +23,6 @@ class AMQPStreamConnection extends AbstractConnection
      * @param int $heartbeat
      * @param float $channel_rpc_timeout
      * @param string|AMQPConnectionConfig|null $ssl_protocol @deprecated
-     * @param AMQPConnectionConfig|null $config
      * @throws \Exception
      */
     public function __construct(
@@ -91,28 +90,18 @@ class AMQPStreamConnection extends AbstractConnection
      * @deprecated Use AmqpConnectionFactory
      * @throws \Exception
      */
-    protected static function try_create_connection($host, $port, $user, $password, $vhost, $options)
+    protected static function try_create_connection($host, $port, $user, $password, $vhost, array $options): self
     {
-        $insist = isset($options['insist']) ?
-                        $options['insist'] : false;
-        $login_method = isset($options['login_method']) ?
-                              $options['login_method'] : 'AMQPLAIN';
-        $login_response = isset($options['login_response']) ?
-                                $options['login_response'] : null;
-        $locale = isset($options['locale']) ?
-                        $options['locale'] : 'en_US';
-        $connection_timeout = isset($options['connection_timeout']) ?
-                                    $options['connection_timeout'] : 3.0;
-        $read_write_timeout = isset($options['read_write_timeout']) ?
-                                    $options['read_write_timeout'] : 3.0;
-        $context = isset($options['context']) ?
-                         $options['context'] : null;
-        $keepalive = isset($options['keepalive']) ?
-                           $options['keepalive'] : false;
-        $heartbeat = isset($options['heartbeat']) ?
-                           $options['heartbeat'] : 60;
-        $channel_rpc_timeout = isset($options['channel_rpc_timeout']) ?
-                                    $options['channel_rpc_timeout'] : 0.0;
+        $insist = $options['insist'] ?? false;
+        $login_method = $options['login_method'] ?? 'AMQPLAIN';
+        $login_response = $options['login_response'] ?? null;
+        $locale = $options['locale'] ?? 'en_US';
+        $connection_timeout = $options['connection_timeout'] ?? 3.0;
+        $read_write_timeout = $options['read_write_timeout'] ?? 3.0;
+        $context = $options['context'] ?? null;
+        $keepalive = $options['keepalive'] ?? false;
+        $heartbeat = $options['heartbeat'] ?? 60;
+        $channel_rpc_timeout = $options['channel_rpc_timeout'] ?? 0.0;
         return new static(
             $host,
             $port,

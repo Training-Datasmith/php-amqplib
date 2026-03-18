@@ -24,15 +24,8 @@ echo " done.\n";
 
 $wait = true;
 
-$returnListener = function (
-    $replyCode,
-    $replyText,
-    $exchange,
-    $routingKey,
-    $message
-) use ($wait) {
+$returnListener = function ($replyCode, $replyText, $exchange, $routingKey, $message): void {
     $GLOBALS['wait'] = false;
-
     echo 'return: ',
     $replyCode, "\n",
     $replyText, "\n",

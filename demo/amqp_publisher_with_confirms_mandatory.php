@@ -12,19 +12,19 @@ $connection = new AMQPStreamConnection(HOST, PORT, USER, PASS, VHOST);
 $channel = $connection->channel();
 
 $channel->set_ack_handler(
-    function (AMQPMessage $message) {
+    function (AMQPMessage $message): void {
         echo 'Message acked with content ' . $message->body . PHP_EOL;
     }
 );
 
 $channel->set_nack_handler(
-    function (AMQPMessage $message) {
+    function (AMQPMessage $message): void {
         echo 'Message nacked with content ' . $message->body . PHP_EOL;
     }
 );
 
 $channel->set_return_listener(
-    function ($replyCode, $replyText, $exchange, $routingKey, AMQPMessage $message) {
+    function ($replyCode, $replyText, $exchange, $routingKey, AMQPMessage $message): void {
         echo 'Message returned with content ' . $message->body . PHP_EOL;
     }
 );
@@ -48,7 +48,7 @@ $channel->confirm_select();
 $channel->exchange_declare($exchange, AMQPExchangeType::FANOUT, false, false, true);
 
 $i = 1;
-$message = new AMQPMessage($i, array('content_type' => 'text/plain'));
+$message = new AMQPMessage($i, ['content_type' => 'text/plain']);
 $channel->basic_publish($message, $exchange, null, true);
 
 /*
@@ -59,7 +59,7 @@ $channel->basic_publish($message, $exchange, null, true);
 $channel->wait_for_pending_acks_returns();
 
 while ($i <= 11) {
-    $message = new AMQPMessage($i++, array('content_type' => 'text/plain'));
+    $message = new AMQPMessage($i++, ['content_type' => 'text/plain']);
     $channel->basic_publish($message, $exchange, null, true);
 }
 

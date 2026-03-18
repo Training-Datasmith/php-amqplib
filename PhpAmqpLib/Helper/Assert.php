@@ -10,7 +10,7 @@ class Assert
      * @param mixed $argument
      * @throws \InvalidArgumentException
      */
-    public static function isCallable($argument)
+    public static function isCallable($argument): void
     {
         if (!is_callable($argument)) {
             throw new InvalidArgumentException(sprintf(

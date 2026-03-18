@@ -17,7 +17,7 @@ require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/../tests/config.php';
 
 //suboptimal function to generate random content
-function generate_random_content($bytes)
+function generate_random_content($bytes): string
 {
     $handle = @fopen('/dev/urandom', 'rb');
 

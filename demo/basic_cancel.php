@@ -24,4 +24,4 @@ $channel->queue_delete($queue);
 /*
  * if the server is capable of sending basic.cancel messages, too, this call will end in an AMQPBasicCancelException.
  */
-$channel->wait(array($waitHelper->get_wait('basic.cancel')));
+$channel->wait([$waitHelper->get_wait('basic.cancel')]);

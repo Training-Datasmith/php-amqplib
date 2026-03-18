@@ -12,7 +12,7 @@ $channel->queue_declare('qos_queue', false, true, false, false);
 
 $channel->basic_qos(null, 10000, null);
 
-function process_message($message)
+function process_message($message): void
 {
     $message->ack();
 }

@@ -26,10 +26,9 @@ abstract class AMQPReader extends AMQPByteStream
     abstract protected function rawread(int $n): string;
 
     /**
-     * @param int $n
      * @return string
      */
-    public function read($n)
+    public function read(int $n)
     {
         $this->resetCounters();
 
@@ -186,17 +185,16 @@ abstract class AMQPReader extends AMQPByteStream
         if (self::PLATFORM_64BIT) {
             $res = unpack('q', $this->correctEndianness($bytes));
             return $res[1];
-        } else {
-            // on 32-bit systems we can "unpack" up to 31 bits integer
-            list(, $hi, $lo) = unpack('N2', $bytes);
-            if ($hi === 0 && $lo > 0) {
-                // positive and less than 2^31-1
-                return $lo;
-            }
-            // negative and more than -2^31
-            if ($hi === -1 && $this->getLongMSB($lo)) {
-                return $lo;
-            }
+        }
+        // on 32-bit systems we can "unpack" up to 31 bits integer
+        list(, $hi, $lo) = unpack('N2', $bytes);
+        if ($hi === 0 && $lo > 0) {
+            // positive and less than 2^31-1
+            return $lo;
+        }
+        // negative and more than -2^31
+        if ($hi === -1 && $this->getLongMSB($lo)) {
+            return $lo;
         }
 
         $var = new BigInteger($bytes, -256);
@@ -284,13 +282,13 @@ abstract class AMQPReader extends AMQPByteStream
         }
 
         $table_data = new AMQPBufferReader($this->rawread($tlen));
-        $result = $returnObject ? new AMQPTable() : array();
+        $result = $returnObject ? new AMQPTable() : [];
 
         while ($table_data->tell() < $tlen) {
             $name = $table_data->read_shortstr();
             $ftype = AMQPAbstractCollection::getDataTypeForSymbol($ftypeSym = $table_data->rawread(1));
             $val = $table_data->read_value($ftype, $returnObject);
-            $returnObject ? $result->set($name, $val, $ftype) : $result[$name] = array($ftypeSym, $val);
+            $returnObject ? $result->set($name, $val, $ftype) : $result[$name] = [$ftypeSym, $val];
         }
 
         return $result;
@@ -318,7 +316,7 @@ abstract class AMQPReader extends AMQPByteStream
         $arrayLength = $this->read_php_int();
         $endOffset = $this->offset + $arrayLength;
 
-        $result = $returnObject ? new AMQPArray() : array();
+        $result = $returnObject ? new AMQPArray() : [];
 
         // Read values until we reach the end of the array
         while ($this->offset < $endOffset) {

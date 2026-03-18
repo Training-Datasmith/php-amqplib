@@ -19,9 +19,9 @@ if (empty($data)) {
 }
 
 $message = new AMQPMessage($data);
-$headers = new Wire\AMQPTable(array(
+$headers = new Wire\AMQPTable([
     'foo' => 'bar',
-    'table' => array('figuf', 'ghf' => 5, 5 => 675),
+    'table' => ['figuf', 'ghf' => 5, 5 => 675],
     'num1' => -4294967295,
     'num2' => 5,
     'num3' => -2147483648,
@@ -29,32 +29,32 @@ $headers = new Wire\AMQPTable(array(
     'false' => false,
     'void' => null,
     'date' => new DateTime('now', new DateTimeZone('UTC')),
-    'array' => array(null, 'foo', 'bar', 5, 5674625, 'ttt', array(5, 8, 2)),
-    'arr_with_tbl' => array(
+    'array' => [null, 'foo', 'bar', 5, 5674625, 'ttt', [5, 8, 2]],
+    'arr_with_tbl' => [
         'bar',
         5,
-        array(
+        [
             'foo',
             57,
             'ee',
-            array(
+            [
                 'foo' => 'bar',
                 'baz' => 'boo',
-                'arr' => array(1, 2, 3, true, new DateTime('now', new DateTimeZone('UTC'))),
-            ),
-        ),
+                'arr' => [1, 2, 3, true, new DateTime('now', new DateTimeZone('UTC'))],
+            ],
+        ],
         67,
-        array(
+        [
             'foo' => 'bar',
             5 => 7,
             8 => 'boo',
             'baz' => 3,
-        ),
-    ),
+        ],
+    ],
     '64bitint' => 9223372036854775807,
     '64bit_uint' => '18446744073709600000',
-    '64bitint_neg' => -pow(2, 40),
-));
+    '64bitint_neg' => -2 ** 40,
+]);
 $headers->set('shortshort', -5, Wire\AMQPTable::T_INT_SHORTSHORT);
 $headers->set('short', -1024, Wire\AMQPTable::T_INT_SHORT);
 

@@ -18,9 +18,8 @@ class AMQPTimeoutException extends \RuntimeException implements AMQPExceptionInt
     /**
      * @param int|float|null $timeout
      * @param int $code
-     * @return self
      */
-    public static function writeTimeout($timeout, $code = 0)
+    public static function writeTimeout($timeout, $code = 0): self
     {
         return new self('Error sending data. Connection timed out.', $timeout, $code);
     }

@@ -12,7 +12,7 @@ class AMQPConnectionFactory
     public static function create(AMQPConnectionConfig $config): AbstractConnection
     {
         if ($config->getIoType() === AMQPConnectionConfig::IO_TYPE_STREAM) {
-            $connection = new AMQPStreamConnection(
+            return new AMQPStreamConnection(
                 $config->getHost(),
                 $config->getPort(),
                 $config->getUser(),
@@ -30,31 +30,28 @@ class AMQPConnectionFactory
                 $config->getChannelRPCTimeout(),
                 $config
             );
-        } else {
-            if ($config->isSecure()) {
-                throw new LogicException('The socket connection implementation does not support secure connections.');
-            }
-
-            $connection = new AMQPSocketConnection(
-                $config->getHost(),
-                $config->getPort(),
-                $config->getUser(),
-                $config->getPassword(),
-                $config->getVhost(),
-                $config->isInsist(),
-                $config->getLoginMethod(),
-                $config->getLoginResponse(),
-                $config->getLocale(),
-                $config->getReadTimeout(),
-                $config->isKeepalive(),
-                $config->getWriteTimeout(),
-                $config->getHeartbeat(),
-                $config->getChannelRPCTimeout(),
-                $config
-            );
+        }
+        if ($config->isSecure()) {
+            throw new LogicException('The socket connection implementation does not support secure connections.');
         }
 
-        return $connection;
+        return new AMQPSocketConnection(
+            $config->getHost(),
+            $config->getPort(),
+            $config->getUser(),
+            $config->getPassword(),
+            $config->getVhost(),
+            $config->isInsist(),
+            $config->getLoginMethod(),
+            $config->getLoginResponse(),
+            $config->getLocale(),
+            $config->getReadTimeout(),
+            $config->isKeepalive(),
+            $config->getWriteTimeout(),
+            $config->getHeartbeat(),
+            $config->getChannelRPCTimeout(),
+            $config
+        );
     }
 
     private static function getReadWriteTimeout(AMQPConnectionConfig $config): float
@@ -63,7 +60,6 @@ class AMQPConnectionFactory
     }
 
     /**
-     * @param AMQPConnectionConfig $config
      * @return string[]
      */
     private static function getSslOptions(AMQPConnectionConfig $config): array
@@ -79,13 +75,12 @@ class AMQPConnectionFactory
             'ciphers' => $config->getSslCiphers(),
             'security_level' => $config->getSslSecurityLevel(),
             'crypto_method' => $config->getSslCryptoMethod(),
-        ], static function ($value) {
+        ], static function ($value): bool {
             return null !== $value;
         });
     }
 
     /**
-     * @param AMQPConnectionConfig $config
      * @return resource|null
      */
     private static function getStreamContext(AMQPConnectionConfig $config)

@@ -68,7 +68,7 @@ class StreamIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function connect()
+    public function connect(): void
     {
         $errstr = $errno = null;
 
@@ -117,7 +117,7 @@ class StreamIO extends AbstractIO
             );
         }
 
-        list($sec, $uSec) = MiscHelper::splitSecondsMicroseconds(max($this->read_timeout, $this->write_timeout));
+        [$sec, $uSec] = MiscHelper::splitSecondsMicroseconds(max($this->read_timeout, $this->write_timeout));
         if (!stream_set_timeout($this->sock, $sec, $uSec)) {
             throw new AMQPIOException('Timeout could not be set');
         }
@@ -171,11 +171,11 @@ class StreamIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function read($len)
+    public function read($len): string
     {
         $this->check_heartbeat();
 
-        list($timeout_sec, $timeout_uSec) = MiscHelper::splitSecondsMicroseconds($this->read_timeout);
+        [$timeout_sec, $timeout_uSec] = MiscHelper::splitSecondsMicroseconds($this->read_timeout);
 
         $read_start = microtime(true);
         $read = 0;
@@ -236,7 +236,7 @@ class StreamIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function write($data)
+    public function write($data): void
     {
         $this->checkBrokerHeartbeat();
 
@@ -338,7 +338,7 @@ class StreamIO extends AbstractIO
         parent::error_handler($code > 0 ? $code : $errno, $errstr, $errfile, $errline);
     }
 
-    public function close()
+    public function close(): void
     {
         $this->disableHeartbeat();
         if (is_resource($this->sock)) {
@@ -368,7 +368,7 @@ class StreamIO extends AbstractIO
             throw new AMQPConnectionClosedException('Broken pipe or closed connection', 0);
         }
 
-        $read = array($this->sock);
+        $read = [$this->sock];
         $write = null;
         $except = null;
 
@@ -385,7 +385,7 @@ class StreamIO extends AbstractIO
     protected function select_write()
     {
         $read = $except = null;
-        $write = array($this->sock);
+        $write = [$this->sock];
 
         return stream_select($read, $write, $except, 0, 100000);
     }
@@ -420,16 +420,15 @@ class StreamIO extends AbstractIO
 
     /**
      * @param string $message
-     * @return int
      */
-    protected function extract_error_code($message)
+    protected function extract_error_code($message): int
     {
         if (0 === strpos($message, 'stream_select():')) {
             $pattern = '/\s+\[(\d+)\]:\s+/';
         } else {
             $pattern = '/\s+errno=(\d+)\s+/';
         }
-        $matches = array();
+        $matches = [];
         $result = preg_match($pattern, $message, $matches);
         if ($result > 0) {
             return (int)$matches[1];
@@ -461,8 +460,6 @@ class StreamIO extends AbstractIO
             $this->restoreErrorHandler();
         }
 
-        if ($enabled !== true) {
-            throw new AMQPIOException('Could not enable socket crypto');
-        }
+        throw new AMQPIOException('Could not enable socket crypto');
     }
 }
