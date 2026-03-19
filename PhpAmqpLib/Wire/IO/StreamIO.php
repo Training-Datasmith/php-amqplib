@@ -162,7 +162,14 @@ class StreamIO extends AbstractIO
 
         $options = stream_context_get_options($context);
         if (!empty($options['ssl']) && !isset($options['ssl']['crypto_method'])) {
-            if (!stream_context_set_option($context, 'ssl', 'crypto_method', STREAM_CRYPTO_METHOD_ANY_CLIENT)) {
+            // Default to TLS 1.2+ only. TLS 1.0 and 1.1 are deprecated (RFC 8996)
+            // and vulnerable to BEAST/POODLE attacks. STREAM_CRYPTO_METHOD_ANY_CLIENT
+            // is intentionally avoided as it permits those deprecated protocol versions.
+            $cryptoMethod = STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT;
+            if (defined('STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT')) {
+                $cryptoMethod |= STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT;
+            }
+            if (!stream_context_set_option($context, 'ssl', 'crypto_method', $cryptoMethod)) {
                 throw new AMQPIOException('Can not set ssl.crypto_method stream context option');
             }
         }
