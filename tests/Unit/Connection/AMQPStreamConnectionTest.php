@@ -43,6 +43,10 @@ class AMQPStreamConnectionTest extends TestCase
      */
     public function trigger_deprecation_is_ssl_protocol_set(): void
     {
+        if (!rabbitmq_available()) {
+            $this->markTestSkipped('RabbitMQ broker not available at ' . HOST . ':' . PORT);
+        }
+
         $deprecationMessage = '';
         $deprecationCode = '';
         set_error_handler(

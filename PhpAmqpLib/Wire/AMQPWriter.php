@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Exception\AMQPInvalidArgumentException;
@@ -14,16 +12,16 @@ class AMQPWriter extends AMQPByteStream
     protected $out = '';
 
     /** @var array */
-    protected $bits = [];
+    protected $bits = array();
 
     /** @var int */
     protected $bitcount = 0;
 
-    private function flushbits(): void
+    private function flushbits()
     {
         if (!empty($this->bits)) {
             $this->out .= implode('', array_map('chr', $this->bits));
-            $this->bits = [];
+            $this->bits = array();
             $this->bitcount = 0;
         }
     }
@@ -46,10 +44,11 @@ class AMQPWriter extends AMQPByteStream
     /**
      * Write a plain PHP string, with no special encoding.
      *
+     * @param string $s
      *
      * @return $this
      */
-    public function write(string $s): self
+    public function write($s)
     {
         $this->out .= $s;
 
@@ -64,7 +63,7 @@ class AMQPWriter extends AMQPByteStream
      * @param bool $b
      * @return $this
      */
-    public function write_bit($b): self
+    public function write_bit($b)
     {
         $b = $b ? 1 : 0;
         $shift = $this->bitcount % 8;
@@ -82,7 +81,7 @@ class AMQPWriter extends AMQPByteStream
      * @param bool[] $bits
      * @return $this
      */
-    public function write_bits($bits): self
+    public function write_bits($bits)
     {
         $value = 0;
 
@@ -103,7 +102,7 @@ class AMQPWriter extends AMQPByteStream
      * @return $this
      * @throws \PhpAmqpLib\Exception\AMQPInvalidArgumentException
      */
-    public function write_octet($n): self
+    public function write_octet($n)
     {
         if ($n < 0 || $n > 255) {
             throw new AMQPInvalidArgumentException('Octet out of range: ' . $n);
@@ -118,7 +117,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int $n
      * @return $this
      */
-    public function write_signed_octet($n): self
+    public function write_signed_octet($n)
     {
         if (($n < -128) || ($n > 127)) {
             throw new AMQPInvalidArgumentException('Signed octet out of range: ' . $n);
@@ -136,7 +135,7 @@ class AMQPWriter extends AMQPByteStream
      * @return $this
      * @throws \PhpAmqpLib\Exception\AMQPInvalidArgumentException
      */
-    public function write_short($n): self
+    public function write_short($n)
     {
         if ($n < 0 || $n > 65535) {
             throw new AMQPInvalidArgumentException('Short out of range: ' . $n);
@@ -151,7 +150,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int $n
      * @return $this
      */
-    public function write_signed_short($n): self
+    public function write_signed_short($n)
     {
         if (($n < -32768) || ($n > 32767)) {
             throw new AMQPInvalidArgumentException('Signed short out of range: ' . $n);
@@ -168,7 +167,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int|string $n
      * @return $this
      */
-    public function write_long($n): self
+    public function write_long($n)
     {
         if (($n < 0) || ($n > 4294967295)) {
             throw new AMQPInvalidArgumentException('Long out of range: ' . $n);
@@ -187,7 +186,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int $n
      * @return $this
      */
-    private function writeSignedLong($n): self
+    private function writeSignedLong($n)
     {
         if (($n < -2147483648) || ($n > 2147483647)) {
             throw new AMQPInvalidArgumentException('Signed long out of range: ' . $n);
@@ -206,7 +205,7 @@ class AMQPWriter extends AMQPByteStream
      * @return $this
      * @throws AMQPOutOfRangeException
      */
-    public function write_longlong($n): self
+    public function write_longlong($n)
     {
         if (is_int($n)) {
             if ($n < 0) {
@@ -241,7 +240,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int|string $n
      * @return $this
      */
-    public function write_signed_longlong($n): self
+    public function write_signed_longlong($n)
     {
         if (is_int($n)) {
             if (self::PLATFORM_64BIT) {
@@ -278,10 +277,11 @@ class AMQPWriter extends AMQPByteStream
      * Write a string up to 255 bytes long after encoding.
      * Assume UTF-8 encoding
      *
+     * @param string $s
      * @return $this
      * @throws \PhpAmqpLib\Exception\AMQPInvalidArgumentException
      */
-    public function write_shortstr(string $s): self
+    public function write_shortstr($s)
     {
         if ($s === null) {
             $this->write_octet(0);
@@ -303,9 +303,10 @@ class AMQPWriter extends AMQPByteStream
     /**
      * Write a string up to 2**32 bytes long.  Assume UTF-8 encoding
      *
+     * @param string $s
      * @return $this
      */
-    public function write_longstr(string $s): self
+    public function write_longstr($s)
     {
         if ($s === null) {
             $this->write_long(0);
@@ -324,8 +325,9 @@ class AMQPWriter extends AMQPByteStream
      * array methods, like Rabbitmq's HA parameters
      *
      * @param AMQPArray|array $a Instance of AMQPArray or PHP array WITHOUT format hints (unlike write_table())
+     * @return self
      */
-    public function write_array($a): self
+    public function write_array($a)
     {
         if (!($a instanceof AMQPArray)) {
             $a = new AMQPArray($a);
@@ -349,7 +351,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int $v
      * @return $this
      */
-    public function write_timestamp($v): self
+    public function write_timestamp($v)
     {
         $this->write_longlong($v);
 
@@ -364,13 +366,13 @@ class AMQPWriter extends AMQPByteStream
      * @return $this
      * @throws \PhpAmqpLib\Exception\AMQPInvalidArgumentException
      */
-    public function write_table($d): self
+    public function write_table($d)
     {
         $typeIsSym = !($d instanceof AMQPTable); //purely for back-compat purposes
 
         $table_data = new self();
         foreach ($d as $k => $va) {
-            [$ftype, $v] = $va;
+            list($ftype, $v) = $va;
             $table_data->write_shortstr($k);
             $table_data->writeValue($typeIsSym ? AMQPAbstractCollection::getDataTypeForSymbol($ftype) : $ftype, $v);
         }
@@ -397,7 +399,7 @@ class AMQPWriter extends AMQPByteStream
      * @param int $type One of AMQPAbstractCollection::T_* constants
      * @param mixed $val
      */
-    private function writeValue($type, $val): void
+    private function writeValue($type, $val)
     {
         //This will find appropriate symbol for given data type for currently selected protocol
         //Also will raise an exception on unknown type
@@ -442,7 +444,6 @@ class AMQPWriter extends AMQPByteStream
                 $this->write_shortstr($val);
                 break;
             case AMQPAbstractCollection::T_STRING_LONG:
-            case AMQPAbstractCollection::T_BYTES:
                 $this->write_longstr($val);
                 break;
             case AMQPAbstractCollection::T_ARRAY:
@@ -452,6 +453,9 @@ class AMQPWriter extends AMQPByteStream
                 $this->write_table($val);
                 break;
             case AMQPAbstractCollection::T_VOID:
+                break;
+            case AMQPAbstractCollection::T_BYTES:
+                $this->write_longstr($val);
                 break;
             default:
                 throw new AMQPInvalidArgumentException(sprintf(

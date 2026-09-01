@@ -13,6 +13,13 @@ use PHPUnit\Framework\TestCase;
  */
 class SocketIOTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        if (!extension_loaded('sockets')) {
+            $this->markTestSkipped('ext-sockets is required for SocketIO tests');
+        }
+    }
+
     /**
      * @test
      */

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire\IO;
 
 use PhpAmqpLib\Connection\AMQPConnectionConfig;
@@ -13,7 +11,7 @@ use PhpAmqpLib\Wire\AMQPWriter;
 
 abstract class AbstractIO
 {
-    public const BUFFER_SIZE = 8192;
+    const BUFFER_SIZE = 8192;
 
     /** @var null|AMQPConnectionConfig */
     protected $config;
@@ -80,6 +78,8 @@ abstract class AbstractIO
     abstract public function close();
 
     /**
+     * @param int|null $sec
+     * @param int $usec
      * @return int
      * @throws AMQPIOWaitException
      * @throws AMQPRuntimeException
@@ -104,13 +104,15 @@ abstract class AbstractIO
 
         // no exception and false result - either timeout or signal was sent
         if ($result === false) {
-            return 0;
+            $result = 0;
         }
 
         return $result;
     }
 
     /**
+     * @param int|null $sec
+     * @param int $usec
      * @return int|bool
      * @throws AMQPConnectionClosedException
      */
@@ -126,6 +128,7 @@ abstract class AbstractIO
 
     /**
      * Set connection params connection tune(negotiation).
+     * @param int $heartbeat
      */
     public function afterTune(int $heartbeat): void
     {
@@ -135,9 +138,10 @@ abstract class AbstractIO
 
     /**
      * Heartbeat logic: check connection health here
+     * @return void
      * @throws AMQPRuntimeException
      */
-    public function check_heartbeat(): void
+    public function check_heartbeat()
     {
         // ignore unless heartbeat interval is set
         if ($this->heartbeat !== 0 && $this->last_read > 0 && $this->last_write > 0) {
@@ -220,7 +224,7 @@ abstract class AbstractIO
     protected function setErrorHandler(): void
     {
         $this->last_error = null;
-        set_error_handler([$this, 'error_handler']);
+        set_error_handler(array($this, 'error_handler'));
     }
 
     protected function throwOnError(): void
@@ -244,6 +248,7 @@ abstract class AbstractIO
      * @param  string $errstr
      * @param  string $errfile
      * @param  int $errline
+     * @return void
      */
     public function error_handler($errno, $errstr, $errfile, $errline): void
     {

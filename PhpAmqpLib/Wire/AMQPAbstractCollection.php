@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Channel\AbstractChannel;
@@ -14,34 +12,34 @@ use PhpAmqpLib\Wire;
 abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
 {
     //protocol defines available field types and their corresponding symbols
-    public const PROTOCOL_RBT = 'rabbit'; //pseudo proto
+    const PROTOCOL_RBT = 'rabbit'; //pseudo proto
 
     //Abstract data types
-    public const T_INT_SHORTSHORT = 1;
-    public const T_INT_SHORTSHORT_U = 2;
-    public const T_INT_SHORT = 3;
-    public const T_INT_SHORT_U = 4;
-    public const T_INT_LONG = 5;
-    public const T_INT_LONG_U = 6;
-    public const T_INT_LONGLONG = 7;
-    public const T_INT_LONGLONG_U = 8;
+    const T_INT_SHORTSHORT = 1;
+    const T_INT_SHORTSHORT_U = 2;
+    const T_INT_SHORT = 3;
+    const T_INT_SHORT_U = 4;
+    const T_INT_LONG = 5;
+    const T_INT_LONG_U = 6;
+    const T_INT_LONGLONG = 7;
+    const T_INT_LONGLONG_U = 8;
 
-    public const T_DECIMAL = 9;
-    public const T_TIMESTAMP = 10;
-    public const T_VOID = 11;
+    const T_DECIMAL = 9;
+    const T_TIMESTAMP = 10;
+    const T_VOID = 11;
 
-    public const T_BOOL = 12;
+    const T_BOOL = 12;
 
-    public const T_STRING_SHORT = 13;
-    public const T_STRING_LONG = 14;
+    const T_STRING_SHORT = 13;
+    const T_STRING_LONG = 14;
 
-    public const T_ARRAY = 15;
-    public const T_TABLE = 16;
+    const T_ARRAY = 15;
+    const T_TABLE = 16;
 
-    public const T_BYTES = 17;
+    const T_BYTES = 17;
 
-    public const T_FLOAT = 18;
-    public const T_DOUBLE = 19;
+    const T_FLOAT = 18;
+    const T_DOUBLE = 19;
 
     /**
      * @var string
@@ -55,18 +53,18 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
      * @var array<int, string>
      * @deprecated
      */
-    private static $types_080 = [
+    private static $types_080 = array(
         self::T_INT_LONG => 'I',
         self::T_DECIMAL => 'D',
         self::T_TIMESTAMP => 'T',
         self::T_STRING_LONG => 'S',
-        self::T_TABLE => 'F',
-    ];
+        self::T_TABLE => 'F'
+    );
 
     /**
      * @var array<int, string>
      */
-    private static $types_091 = [
+    private static $types_091 = array(
         self::T_INT_SHORTSHORT => 'b',
         self::T_INT_SHORTSHORT_U => 'B',
         self::T_INT_SHORT => 'U',
@@ -86,12 +84,12 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
         self::T_ARRAY => 'A',
         self::T_TABLE => 'F',
         self::T_BYTES => 'x',
-    ];
+    );
 
     /**
      * @var array<int, string>
      */
-    private static $types_rabbit = [
+    private static $types_rabbit = array(
         self::T_INT_SHORTSHORT => 'b',
         self::T_INT_SHORTSHORT_U => 'B',
         self::T_INT_SHORT => 's',
@@ -109,12 +107,12 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
         self::T_ARRAY => 'A',
         self::T_TABLE => 'F',
         self::T_BYTES => 'x',
-    ];
+    );
 
     /**
      * @var array
      */
-    protected $data = [];
+    protected $data = array();
 
     public function __construct(?array $data = null)
     {
@@ -165,7 +163,7 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
 
         if ($type) {
             self::checkDataTypeIsSupported($type, false);
-            $val = [$type, $val];
+            $val = array($type, $val);
         } else {
             $val = $this->encodeValue($val);
         }
@@ -186,6 +184,7 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
     }
 
     /**
+     * @param array $val
      * @return array
      */
     final protected function encodeCollection(array $val)
@@ -198,6 +197,7 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
     }
 
     /**
+     * @param array $val
      * @return array
      */
     final protected function decodeCollection(array $val)
@@ -221,7 +221,7 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
     #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
-        $value = $this->data[$offset] ?? null;
+        $value = isset($this->data[$offset]) ? $this->data[$offset] : null;
 
         return is_array($value) ? $value[1] : $value;
     }
@@ -254,24 +254,24 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
         } elseif (is_null($val)) {
             $val = $this->encodeVoid();
         } elseif ($val instanceof \DateTimeInterface) {
-            $val = [self::T_TIMESTAMP, $val->getTimestamp()];
+            $val = array(self::T_TIMESTAMP, $val->getTimestamp());
         } elseif ($val instanceof AMQPDecimal) {
-            $val = [self::T_DECIMAL, $val];
+            $val = array(self::T_DECIMAL, $val);
         } elseif ($val instanceof self) {
             //avoid silent type correction of strictly typed values
             self::checkDataTypeIsSupported($val->getType(), false);
-            $val = [$val->getType(), $val];
+            $val = array($val->getType(), $val);
         } elseif (is_array($val)) {
             //AMQP specs says "Field names MUST start with a letter, '$' or '#'"
             //so beware, some servers may raise an exception with 503 code in cases when indexed
             // array is encoded as table
             if (self::isProtocol(Wire\Constants080::VERSION)) {
                 //080 doesn't support arrays, forcing table
-                $val = [self::T_TABLE, new AMQPTable($val)];
+                $val = array(self::T_TABLE, new AMQPTable($val));
             } elseif (empty($val) || (array_keys($val) === range(0, count($val) - 1))) {
-                $val = [self::T_ARRAY, new AMQPArray($val)];
+                $val = array(self::T_ARRAY, new AMQPArray($val));
             } else {
-                $val = [self::T_TABLE, new AMQPTable($val)];
+                $val = array(self::T_TABLE, new AMQPTable($val));
             }
         } else {
             throw new Exception\AMQPOutOfBoundsException(
@@ -324,7 +324,7 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
      */
     protected function encodeString($val)
     {
-        return [self::T_STRING_LONG, $val];
+        return array(self::T_STRING_LONG, $val);
     }
 
     /**
@@ -334,12 +334,12 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
     protected function encodeInt($val)
     {
         if (($val >= -2147483648) && ($val <= 2147483647)) {
-            $ev = [self::T_INT_LONG, $val];
+            $ev = array(self::T_INT_LONG, $val);
         } elseif (self::isProtocol(Wire\Constants080::VERSION)) {
             //080 doesn't support longlong
             $ev = $this->encodeString((string) $val);
         } else {
-            $ev = [self::T_INT_LONGLONG, $val];
+            $ev = array(self::T_INT_LONGLONG, $val);
         }
 
         return $ev;
@@ -363,8 +363,8 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
         $val = (bool) $val;
 
         return self::isProtocol(Wire\Constants080::VERSION)
-            ? [self::T_INT_LONG, (int) $val]
-            : [self::T_BOOL, $val];
+            ? array(self::T_INT_LONG, (int) $val)
+            : array(self::T_BOOL, $val);
     }
 
     /**
@@ -372,7 +372,7 @@ abstract class AMQPAbstractCollection implements \Iterator, \ArrayAccess
      */
     protected function encodeVoid()
     {
-        return self::isProtocol(Wire\Constants080::VERSION) ? $this->encodeString('') : [self::T_VOID, null];
+        return self::isProtocol(Wire\Constants080::VERSION) ? $this->encodeString('') : array(self::T_VOID, null);
     }
 
     /**

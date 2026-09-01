@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Channel;
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -28,12 +26,12 @@ abstract class AbstractChannel
     /**
      * @deprecated
      */
-    public const PROTOCOL_080 = Wire\Constants080::VERSION;
+    const PROTOCOL_080 = Wire\Constants080::VERSION;
 
     /**
      * @deprecated
      */
-    public const PROTOCOL_091 = Wire\Constants091::VERSION;
+    const PROTOCOL_091 = Wire\Constants091::VERSION;
 
     /**
      * Lower level queue for frames
@@ -45,7 +43,7 @@ abstract class AbstractChannel
      * Higher level queue for methods
      * @var array
      */
-    protected $method_queue = [];
+    protected $method_queue = array();
 
     /** @var bool */
     protected $auto_decode = false;
@@ -87,6 +85,7 @@ abstract class AbstractChannel
     protected $dispatch_reader;
 
     /**
+     * @param AbstractConnection $connection
      * @param int $channel_id
      * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
      */
@@ -133,7 +132,7 @@ abstract class AbstractChannel
     {
         $protocol = defined('AMQP_PROTOCOL') ? AMQP_PROTOCOL : Wire\Constants091::VERSION;
         //adding check here to catch unknown protocol ASAP, as this method may be called from the outside
-        if (!in_array($protocol, [Wire\Constants080::VERSION, Wire\Constants091::VERSION], true)) {
+        if (!in_array($protocol, array(Wire\Constants080::VERSION, Wire\Constants091::VERSION), true)) {
             throw new AMQPOutOfRangeException(sprintf('Protocol version %s not implemented.', $protocol));
         }
 
@@ -189,11 +188,12 @@ abstract class AbstractChannel
 
     /**
      * @param string $method_sig
+     * @param string $args
      * @param AMQPMessage|null $amqpMessage
      * @return mixed
      * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
      */
-    public function dispatch($method_sig, string $args, $amqpMessage)
+    public function dispatch($method_sig, $args, $amqpMessage)
     {
         if (!$this->methodMap->valid_method($method_sig)) {
             throw new AMQPNotImplementedException(sprintf(
@@ -215,14 +215,15 @@ abstract class AbstractChannel
         $this->dispatch_reader->reset($args);
 
         if ($amqpMessage === null) {
-            return call_user_func([$this, $amqp_method], $this->dispatch_reader);
+            return call_user_func(array($this, $amqp_method), $this->dispatch_reader);
         }
 
-        return call_user_func([$this, $amqp_method], $this->dispatch_reader, $amqpMessage);
+        return call_user_func(array($this, $amqp_method), $this->dispatch_reader, $amqpMessage);
     }
 
     /**
      * @param int|float|null $timeout
+     * @return Frame
      */
     protected function next_frame($timeout = 0): Frame
     {
@@ -262,6 +263,7 @@ abstract class AbstractChannel
     }
 
     /**
+     * @return AMQPMessage
      * @throws \PhpAmqpLib\Exception\AMQPRuntimeException
      * @throws AMQPInvalidFrameException
      */
@@ -367,7 +369,7 @@ abstract class AbstractChannel
 
             // Wasn't what we were looking for? save it for later
             $this->debug->debug_method_signature('Queueing for later: %s', $method_sig);
-            $this->method_queue[] = [$method_sig, $method->getArguments(), $amqpMessage];
+            $this->method_queue[] = array($method_sig, $method->getArguments(), $amqpMessage);
 
             if ($non_blocking) {
                 break;
@@ -382,7 +384,7 @@ abstract class AbstractChannel
     protected function process_deferred_methods($allowed_methods)
     {
         $dispatch = false;
-        $queued_method = [];
+        $queued_method = array();
 
         foreach ($this->method_queue as $qk => $qm) {
             $this->debug->debug_msg('checking queue method ' . $qk);
@@ -397,13 +399,14 @@ abstract class AbstractChannel
             }
         }
 
-        return ['dispatch' => $dispatch, 'queued_method' => $queued_method];
+        return array('dispatch' => $dispatch, 'queued_method' => $queued_method);
     }
 
     /**
+     * @param array $queued_method
      * @return mixed
      */
-    protected function dispatch_deferred_method(array $queued_method)
+    protected function dispatch_deferred_method($queued_method)
     {
         $this->debug->debug_method_signature('Executing queued method: %s', $queued_method[0]);
 
@@ -411,6 +414,7 @@ abstract class AbstractChannel
     }
 
     /**
+     * @param Frame $frame
      * @throws \PhpAmqpLib\Exception\AMQPInvalidFrameException
      */
     protected function validate_method_frame(Frame $frame): void
@@ -419,6 +423,8 @@ abstract class AbstractChannel
     }
 
     /**
+     * @param Frame $frame
+     * @param int $expectedType
      * @throws AMQPInvalidFrameException
      */
     protected function validate_frame(Frame $frame, int $expectedType): void
@@ -434,6 +440,7 @@ abstract class AbstractChannel
     }
 
     /**
+     * @param Frame $frame
      * @throws AMQPOutOfBoundsException
      * @throws AMQPInvalidFrameException
      */
@@ -474,15 +481,17 @@ abstract class AbstractChannel
      */
     protected function maybe_wait_for_content($method_sig)
     {
+        $amqpMessage = null;
         if ($this->constants->isContentMethod($method_sig)) {
-            return $this->wait_content();
+            $amqpMessage = $this->wait_content();
         }
 
-        return null;
+        return $amqpMessage;
     }
 
     /**
      * @param callable $handler
+     * @param array $arguments
      */
     protected function dispatch_to_handler($handler, array $arguments = [])
     {

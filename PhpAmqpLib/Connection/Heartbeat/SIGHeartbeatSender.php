@@ -1,7 +1,4 @@
 <?php
-
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Connection\Heartbeat;
 
 use PhpAmqpLib\Connection\AbstractConnection;
@@ -28,6 +25,8 @@ final class SIGHeartbeatSender extends AbstractSignalHeartbeatSender
     private $childPid;
 
     /**
+     * @param AbstractConnection $connection
+     * @param int $signal
      * @throws AMQPRuntimeException
      */
     public function __construct(AbstractConnection $connection, int $signal = SIGUSR1)
@@ -66,20 +65,22 @@ final class SIGHeartbeatSender extends AbstractSignalHeartbeatSender
     {
         pcntl_async_signals(true);
         $this->periodicAlarm($interval);
-        pcntl_signal($this->signal, function () use ($interval): void {
+        pcntl_signal($this->signal, function () use ($interval) {
             $this->handleSignal($interval);
         });
     }
 
     /**
      * Forks the current process to create a child process that will send periodic signals to the parent
+     *
+     * @param int $interval
      */
     private function periodicAlarm(int $interval): void
     {
         $parent = getmypid();
         $pid = pcntl_fork();
-        if (!$pid) {
-            while (true) {
+        if(!$pid) {
+            while (true){
                 $slept = sleep($interval);
                 if ($slept !== 0) {
                     // interupted by signal from parent, exit immediately

@@ -51,6 +51,10 @@ class AMQPConnectionConfigTest extends TestCase
      */
     public function secure_with_incorrect_crypto_method()
     {
+        if (!rabbitmq_available()) {
+            $this->markTestSkipped('RabbitMQ broker not available at ' . HOST . ':' . PORT);
+        }
+
         $this->expectException(AMQPIOException::class);
 
         $cert_dir = realpath(__DIR__ . '/../../certs');
@@ -80,6 +84,10 @@ class AMQPConnectionConfigTest extends TestCase
      */
     public function secure_with_correct_crypto_method()
     {
+        if (!rabbitmq_available()) {
+            $this->markTestSkipped('RabbitMQ broker not available at ' . HOST . ':' . PORT);
+        }
+
         $cert_dir = realpath(__DIR__ . '/../../certs');
         $config = new AMQPConnectionConfig();
         $config->setHost(HOST);
@@ -109,6 +117,10 @@ class AMQPConnectionConfigTest extends TestCase
      */
     public function insecure_connection()
     {
+        if (!rabbitmq_available()) {
+            $this->markTestSkipped('RabbitMQ broker not available at ' . HOST . ':' . PORT);
+        }
+
         $config = new AMQPConnectionConfig();
         $config->setHost(HOST);
         $config->setPort(5671);

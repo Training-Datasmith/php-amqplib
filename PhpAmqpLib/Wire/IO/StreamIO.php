@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire\IO;
 
 use PhpAmqpLib\Exception\AMQPConnectionClosedException;
@@ -70,7 +68,7 @@ class StreamIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function connect(): void
+    public function connect()
     {
         $errstr = $errno = null;
 
@@ -119,7 +117,7 @@ class StreamIO extends AbstractIO
             );
         }
 
-        [$sec, $uSec] = MiscHelper::splitSecondsMicroseconds(max($this->read_timeout, $this->write_timeout));
+        list($sec, $uSec) = MiscHelper::splitSecondsMicroseconds(max($this->read_timeout, $this->write_timeout));
         if (!stream_set_timeout($this->sock, $sec, $uSec)) {
             throw new AMQPIOException('Timeout could not be set');
         }
@@ -162,15 +160,8 @@ class StreamIO extends AbstractIO
 
         $options = stream_context_get_options($context);
         if (!empty($options['ssl']) && !isset($options['ssl']['crypto_method'])) {
-            // Default to TLS 1.2+ only. TLS 1.0 and 1.1 are deprecated (RFC 8996)
-            // and vulnerable to BEAST/POODLE attacks. STREAM_CRYPTO_METHOD_ANY_CLIENT
-            // is intentionally avoided as it permits those deprecated protocol versions.
-            $cryptoMethod = STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT;
-            if (defined('STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT')) {
-                $cryptoMethod |= STREAM_CRYPTO_METHOD_TLSv1_3_CLIENT;
-            }
-            if (!stream_context_set_option($context, 'ssl', 'crypto_method', $cryptoMethod)) {
-                throw new AMQPIOException('Can not set ssl.crypto_method stream context option');
+            if (!stream_context_set_option($context, 'ssl', 'crypto_method', STREAM_CRYPTO_METHOD_ANY_CLIENT)) {
+                throw new AMQPIOException("Can not set ssl.crypto_method stream context option");
             }
         }
 
@@ -180,11 +171,11 @@ class StreamIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function read($len): string
+    public function read($len)
     {
         $this->check_heartbeat();
 
-        [$timeout_sec, $timeout_uSec] = MiscHelper::splitSecondsMicroseconds($this->read_timeout);
+        list($timeout_sec, $timeout_uSec) = MiscHelper::splitSecondsMicroseconds($this->read_timeout);
 
         $read_start = microtime(true);
         $read = 0;
@@ -245,7 +236,7 @@ class StreamIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function write($data): void
+    public function write($data)
     {
         $this->checkBrokerHeartbeat();
 
@@ -339,7 +330,7 @@ class StreamIO extends AbstractIO
             // fwrite notice that the stream isn't ready - EAGAIN or EWOULDBLOCK
             case $constants->SOCKET_EAGAIN:
             case $constants->SOCKET_EWOULDBLOCK:
-                // stream_select warning that it has been interrupted by a signal - EINTR
+            // stream_select warning that it has been interrupted by a signal - EINTR
             case $constants->SOCKET_EINTR:
                 return;
         }
@@ -347,7 +338,7 @@ class StreamIO extends AbstractIO
         parent::error_handler($code > 0 ? $code : $errno, $errstr, $errfile, $errline);
     }
 
-    public function close(): void
+    public function close()
     {
         $this->disableHeartbeat();
         if (is_resource($this->sock)) {
@@ -377,7 +368,7 @@ class StreamIO extends AbstractIO
             throw new AMQPConnectionClosedException('Broken pipe or closed connection', 0);
         }
 
-        $read = [$this->sock];
+        $read = array($this->sock);
         $write = null;
         $except = null;
 
@@ -394,7 +385,7 @@ class StreamIO extends AbstractIO
     protected function select_write()
     {
         $read = $except = null;
-        $write = [$this->sock];
+        $write = array($this->sock);
 
         return stream_select($read, $write, $except, 0, 100000);
     }
@@ -429,15 +420,16 @@ class StreamIO extends AbstractIO
 
     /**
      * @param string $message
+     * @return int
      */
-    protected function extract_error_code($message): int
+    protected function extract_error_code($message)
     {
         if (0 === strpos($message, 'stream_select():')) {
             $pattern = '/\s+\[(\d+)\]:\s+/';
         } else {
             $pattern = '/\s+errno=(\d+)\s+/';
         }
-        $matches = [];
+        $matches = array();
         $result = preg_match($pattern, $message, $matches);
         if ($result > 0) {
             return (int)$matches[1];
@@ -469,6 +461,8 @@ class StreamIO extends AbstractIO
             $this->restoreErrorHandler();
         }
 
-        throw new AMQPIOException('Could not enable socket crypto');
+        if ($enabled !== true) {
+            throw new AMQPIOException('Could not enable socket crypto');
+        }
     }
 }

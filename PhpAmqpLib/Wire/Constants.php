@@ -1,33 +1,31 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire;
 
 abstract class Constants
 {
-    public const VERSION = '';
-    public const AMQP_HEADER = '';
+    const VERSION = '';
+    const AMQP_HEADER = '';
 
     /**
      * @var array<int, string>
      */
-    protected static $FRAME_TYPES = [];
+    protected static $FRAME_TYPES = array();
 
     /**
      * @var array<int, string>
      */
-    protected static $CONTENT_METHODS = [];
+    protected static $CONTENT_METHODS = array();
 
     /**
      * @var array<int, string>
      */
-    protected static $CLOSE_METHODS = [];
+    protected static $CLOSE_METHODS = array();
 
     /**
      * @var array<string, string>
      */
-    public static $GLOBAL_METHOD_NAMES = [];
+    public static $GLOBAL_METHOD_NAMES = array();
 
     /**
      * @return string
@@ -47,9 +45,10 @@ abstract class Constants
     }
 
     /**
+     * @param int $type
      * @return string
      */
-    public function getFrameType(int $type)
+    public function getFrameType($type)
     {
         return static::$FRAME_TYPES[$type];
     }

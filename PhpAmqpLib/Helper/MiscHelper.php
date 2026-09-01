@@ -1,15 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Helper;
 
 class MiscHelper
 {
     /**
      * @param string|array $a
+     * @return string
      */
-    public static function methodSig($a): string
+    public static function methodSig($a)
     {
         if (is_string($a)) {
             return $a;
@@ -26,9 +25,9 @@ class MiscHelper
      * @param int|float $number
      * @return int[]
      */
-    public static function splitSecondsMicroseconds($number): array
+    public static function splitSecondsMicroseconds($number)
     {
-        return [(int)floor($number), (int)(fmod($number, 1) * 1000000)];
+        return array((int)floor($number), (int)(fmod($number, 1) * 1000000));
     }
 
     /**
@@ -47,8 +46,9 @@ class MiscHelper
      * @param bool $htmloutput Set to false for non-HTML output
      * @param bool $uppercase Set to true for uppercase hex
      * @param bool $return Set to true to return the dump
+     * @return string|null
      */
-    public static function hexdump($data, $htmloutput = true, $uppercase = false, $return = false): ?string
+    public static function hexdump($data, $htmloutput = true, $uppercase = false, $return = false)
     {
         // Init
         $hexi = '';
@@ -114,10 +114,11 @@ class MiscHelper
 
     /**
      * @param array $table
+     * @return string
      */
-    public static function dump_table($table): string
+    public static function dump_table($table)
     {
-        $tokens = [];
+        $tokens = array();
         foreach ($table as $name => $value) {
             switch ($value[0]) {
                 case 'D':

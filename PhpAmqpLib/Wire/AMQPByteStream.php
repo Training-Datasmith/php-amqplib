@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Helper\BigInteger;
@@ -22,7 +20,7 @@ abstract class AMQPByteStream
     protected const PLATFORM_64BIT = PHP_INT_SIZE === 8;
 
     /** @var BigInteger[][] */
-    protected static $bigIntegers = [];
+    protected static $bigIntegers = array();
 
     /**
      * @var bool
@@ -88,7 +86,7 @@ abstract class AMQPByteStream
     protected static function getBigInteger($value, $base = 10)
     {
         if (!isset(self::$bigIntegers[$base])) {
-            self::$bigIntegers[$base] = [];
+            self::$bigIntegers[$base] = array();
         }
         if (isset(self::$bigIntegers[$base][$value])) {
             return self::$bigIntegers[$base][$value];

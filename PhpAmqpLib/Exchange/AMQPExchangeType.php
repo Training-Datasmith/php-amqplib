@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Exchange;
 
 final class AMQPExchangeType
 {
-    public const DIRECT = 'direct';
-    public const FANOUT = 'fanout';
-    public const TOPIC = 'topic';
-    public const HEADERS = 'headers';
+    const DIRECT = 'direct';
+    const FANOUT = 'fanout';
+    const TOPIC = 'topic';
+    const HEADERS = 'headers';
 }

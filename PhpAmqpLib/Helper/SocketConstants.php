@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Helper;
 
 /**
@@ -34,22 +32,33 @@ final class SocketConstants
             $this->constants = $constants['sockets'];
         } else {
             trigger_error('Sockets extension is not enabled', E_USER_WARNING);
-            $this->constants = [];
+            $this->constants = array();
         }
     }
 
     /**
+     * @param string $name
      * @return int
      */
-    public function __get(string $name)
+    public function __get($name)
     {
-        return $this->constants[$name] ?? 0;
+        return isset($this->constants[$name]) ? $this->constants[$name] : 0;
     }
 
     /**
+     * @param string $name
+     * @param int $value
+     * @internal
+     */
+    public function __set($name, $value)
+    {
+    }
+
+    /**
+     * @param string $name
      * @return bool
      */
-    public function __isset(string $name)
+    public function __isset($name)
     {
         return isset($this->constants[$name]);
     }

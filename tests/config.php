@@ -9,3 +9,17 @@ define('USER', getenv('TEST_RABBITMQ_USER') ? getenv('TEST_RABBITMQ_USER') : 'gu
 define('PASS', getenv('TEST_RABBITMQ_PASS') ? getenv('TEST_RABBITMQ_PASS') : 'guest');
 define('VHOST', '/');
 define('AMQP_DEBUG', getenv('TEST_AMQP_DEBUG') !== false ? (bool)getenv('TEST_AMQP_DEBUG') : false);
+
+function rabbitmq_available(): bool
+{
+    $errno = 0;
+    $errstr = '';
+    $socket = @fsockopen(HOST, PORT, $errno, $errstr, 1);
+    if ($socket === false) {
+        return false;
+    }
+
+    fclose($socket);
+
+    return true;
+}

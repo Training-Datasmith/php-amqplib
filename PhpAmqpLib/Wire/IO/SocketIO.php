@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire\IO;
 
 use PhpAmqpLib\Connection\AMQPConnectionConfig;
@@ -24,6 +22,7 @@ class SocketIO extends AbstractIO
      * @param bool $keepalive
      * @param int|float|null $write_timeout if null defaults to read timeout
      * @param int $heartbeat how often to send heartbeat. 0 means off
+     * @param null|AMQPConnectionConfig $config
      */
     public function __construct(
         $host,
@@ -59,14 +58,14 @@ class SocketIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function connect(): void
+    public function connect()
     {
         $this->sock = socket_create(!$this->isIpv6() ? AF_INET : AF_INET6, SOCK_STREAM, SOL_TCP);
 
-        [$sec, $uSec] = MiscHelper::splitSecondsMicroseconds($this->write_timeout);
-        socket_set_option($this->sock, SOL_SOCKET, SO_SNDTIMEO, ['sec' => $sec, 'usec' => $uSec]);
-        [$sec, $uSec] = MiscHelper::splitSecondsMicroseconds($this->read_timeout);
-        socket_set_option($this->sock, SOL_SOCKET, SO_RCVTIMEO, ['sec' => $sec, 'usec' => $uSec]);
+        list($sec, $uSec) = MiscHelper::splitSecondsMicroseconds($this->write_timeout);
+        socket_set_option($this->sock, SOL_SOCKET, SO_SNDTIMEO, array('sec' => $sec, 'usec' => $uSec));
+        list($sec, $uSec) = MiscHelper::splitSecondsMicroseconds($this->read_timeout);
+        socket_set_option($this->sock, SOL_SOCKET, SO_RCVTIMEO, array('sec' => $sec, 'usec' => $uSec));
 
         $this->setErrorHandler();
         try {
@@ -112,7 +111,7 @@ class SocketIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function read($len): string
+    public function read($len)
     {
         if (is_null($this->sock)) {
             throw new AMQPSocketException(sprintf(
@@ -123,7 +122,7 @@ class SocketIO extends AbstractIO
 
         $this->check_heartbeat();
 
-        [$timeout_sec, $timeout_uSec] = MiscHelper::splitSecondsMicroseconds($this->read_timeout);
+        list($timeout_sec, $timeout_uSec) = MiscHelper::splitSecondsMicroseconds($this->read_timeout);
         $read_start = microtime(true);
         $read = 0;
         $data = '';
@@ -169,7 +168,7 @@ class SocketIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function write($data): void
+    public function write($data)
     {
         // Null sockets are invalid, throw exception
         if (is_null($this->sock)) {
@@ -245,7 +244,7 @@ class SocketIO extends AbstractIO
     /**
      * @inheritdoc
      */
-    public function close(): void
+    public function close()
     {
         $this->disableHeartbeat();
         if (is_resource($this->sock) || is_a($this->sock, \Socket::class)) {
@@ -266,7 +265,7 @@ class SocketIO extends AbstractIO
             throw new AMQPConnectionClosedException('Broken pipe or closed connection', 0);
         }
 
-        $read = [$this->sock];
+        $read = array($this->sock);
         $write = null;
         $except = null;
 
@@ -279,7 +278,7 @@ class SocketIO extends AbstractIO
     protected function select_write()
     {
         $read = $except = null;
-        $write = [$this->sock];
+        $write = array($this->sock);
 
         return socket_select($read, $write, $except, 0, 100000);
     }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Connection;
 
 use InvalidArgumentException;
@@ -147,6 +145,7 @@ final class AMQPConnectionConfig
 
     /**
      * Set which IO type will be used, stream or socket.
+     * @param string $ioType
      */
     public function setIoType(string $ioType): void
     {
@@ -395,6 +394,7 @@ final class AMQPConnectionConfig
     }
 
     /**
+     * @return int
      * @since 3.2.1
      */
     public function getSendBufferSize(): int
@@ -404,6 +404,8 @@ final class AMQPConnectionConfig
 
     /**
      * Socket send buffer size. Set 0 to keep system default.
+     * @param int $sendBufferSize
+     * @return void
      * @since 3.2.1
      */
     public function setSendBufferSize(int $sendBufferSize): void
@@ -423,6 +425,7 @@ final class AMQPConnectionConfig
     }
 
     /**
+     * @return string
      * @deprecated
      */
     public function getAMQPProtocol(): string
@@ -431,6 +434,7 @@ final class AMQPConnectionConfig
     }
 
     /**
+     * @param string $protocol
      * @deprecated
      */
     public function setAMQPProtocol(string $protocol): void
@@ -565,7 +569,7 @@ final class AMQPConnectionConfig
         $this->debugPackets = $debugPackets;
     }
 
-    private static function assertStringNotEmpty(string $value, string $param): void
+    private static function assertStringNotEmpty($value, string $param): void
     {
         $value = trim($value);
         if (empty($value)) {
@@ -575,6 +579,8 @@ final class AMQPConnectionConfig
 
     /**
      * @param int|float $value
+     * @param int $limit
+     * @param string $param
      */
     private static function assertGreaterOrEq($value, int $limit, string $param): void
     {
@@ -583,11 +589,17 @@ final class AMQPConnectionConfig
         }
     }
 
+    /**
+     * @return string
+     */
     public function getConnectionName(): string
     {
         return $this->connectionName;
     }
 
+    /**
+     * @param string $connectionName
+     */
     public function setConnectionName(string $connectionName): void
     {
         $this->connectionName = $connectionName;

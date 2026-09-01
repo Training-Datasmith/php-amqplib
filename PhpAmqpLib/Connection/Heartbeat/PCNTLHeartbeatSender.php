@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Connection\Heartbeat;
 
 use PhpAmqpLib\Exception\AMQPRuntimeException;
@@ -39,7 +37,7 @@ final class PCNTLHeartbeatSender extends AbstractSignalHeartbeatSender
 
     private function registerListener(int $interval): void
     {
-        pcntl_signal(SIGALRM, function () use ($interval): void {
+        pcntl_signal(SIGALRM, function () use ($interval) {
             $this->handleSignal($interval);
             if ($this->connection) {
                 pcntl_alarm($interval);

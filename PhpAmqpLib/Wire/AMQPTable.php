@@ -1,14 +1,16 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Exception;
 
 class AMQPTable extends AMQPAbstractCollection
 {
-    final public function getType(): int
+
+    /**
+     * @return int
+     */
+    final public function getType()
     {
         return self::T_TABLE;
     }
@@ -18,7 +20,7 @@ class AMQPTable extends AMQPAbstractCollection
      * @param mixed $val
      * @param int|null $type
      */
-    public function set($key, $val, $type = null): void
+    public function set($key, $val, $type = null)
     {
         //https://www.rabbitmq.com/resources/specs/amqp0-9-1.pdf, https://www.rabbitmq.com/resources/specs/amqp0-8.pdf
         //Field names MUST start with a letter, '$' or '#' and may continue with letters, '$' or '#', digits,

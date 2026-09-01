@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Helper;
 
 use InvalidArgumentException;
@@ -12,7 +10,7 @@ class Assert
      * @param mixed $argument
      * @throws \InvalidArgumentException
      */
-    public static function isCallable($argument): void
+    public static function isCallable($argument)
     {
         if (!is_callable($argument)) {
             throw new InvalidArgumentException(sprintf(

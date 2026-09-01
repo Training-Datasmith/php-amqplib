@@ -1,9 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Channel;
-
 use PhpAmqpLib\Wire\AMQPReader;
 
 /**
@@ -40,16 +37,25 @@ final class Frame
         $this->payload = $payload;
     }
 
+    /**
+     * @return int
+     */
     public function getType(): int
     {
         return $this->type;
     }
 
+    /**
+     * @return int
+     */
     public function getChannel(): int
     {
         return $this->channel;
     }
 
+    /**
+     * @return int
+     */
     public function getSize(): int
     {
         return $this->size;

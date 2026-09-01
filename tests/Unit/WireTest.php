@@ -663,7 +663,7 @@ class WireTest extends TestCaseCompat
         $this->assertEquals(
             $value,
             $readValue,
-            'Written: ' . bin2hex($writer->getvalue()) . ', read: ' . bin2hex($readValue)
+            'Written: ' . bin2hex($writer->getvalue()) . ', read: ' . (is_string($readValue) ? bin2hex($readValue) : var_export($readValue, true))
         );
     }
 

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Exception;
 
 class AMQPTimeoutException extends \RuntimeException implements AMQPExceptionInterface
@@ -20,8 +18,9 @@ class AMQPTimeoutException extends \RuntimeException implements AMQPExceptionInt
     /**
      * @param int|float|null $timeout
      * @param int $code
+     * @return self
      */
-    public static function writeTimeout($timeout, $code = 0): self
+    public static function writeTimeout($timeout, $code = 0)
     {
         return new self('Error sending data. Connection timed out.', $timeout, $code);
     }

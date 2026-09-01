@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace PhpAmqpLib\Wire;
 
 use PhpAmqpLib\Exception\AMQPOutOfBoundsException;
@@ -48,7 +46,7 @@ class AMQPDecimal
     {
         $n = new BigInteger($this->n);
         $e = new BigInteger('1' . str_repeat('0', $this->e));
-        [$q] = $n->divide($e);
+        list($q) = $n->divide($e);
         return $q->toString();
     }
 
