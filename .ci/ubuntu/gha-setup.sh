@@ -54,6 +54,7 @@ function start_toxiproxy
         docker run --detach $docker_pull_args \
             --name "$toxiproxy_docker_name" \
             --hostname "$toxiproxy_docker_name" \
+            --add-host=host.docker.internal:host-gateway \
             --publish 8474:8474 \
             --publish 5673:5673 \
             --network "$docker_network_name" \
@@ -133,3 +134,7 @@ start_rabbitmq
 wait_rabbitmq
 
 get_rabbitmq_id
+
+export TOXIPROXY_HOST="${TOXIPROXY_HOST:-localhost}"
+export TOXIPROXY_AMQP_TARGET="${TOXIPROXY_AMQP_TARGET:-host.docker.internal}"
+export TOXIPROXY_AMQP_PORT="${TOXIPROXY_AMQP_PORT:-5673}"

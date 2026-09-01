@@ -113,7 +113,7 @@ abstract class AbstractConnectionTest extends TestCaseCompat
             $this->markTestSkipped('TOXIPROXY_AMQP_PORT is not set');
         }
 
-        return $port;
+        return (int) $port;
     }
 
     protected function assertConnectionClosed(AbstractConnection $connection)

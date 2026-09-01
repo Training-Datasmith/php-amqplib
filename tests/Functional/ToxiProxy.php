@@ -49,6 +49,8 @@ class ToxiProxy
      */
     public function open($host, $port, $listen)
     {
+        $this->closeIfExists();
+
         $payload = [
             'name' => $this->name,
             'upstream' => $host . ':' . $port,
@@ -56,13 +58,13 @@ class ToxiProxy
         ];
         $url = $this->api . '/proxies';
         $request = Request::post($url, json_encode($payload), 'json');
-        $request->timeout(1);
+        $request->timeout(5);
         $request->expectsJson();
         $response = $request->send();
         if ($response->code !== 201) {
             throw new \RuntimeException('Cannot create Toxiproxy connection');
         }
-        $this->listen = $listen;
+        $this->listen = (int) $listen;
         $this->isOpen = true;
     }
 
@@ -85,12 +87,23 @@ class ToxiProxy
         ];
         $url = sprintf('%s/proxies/%s/toxics', $this->api, $this->name);
         $request = Request::post($url, json_encode($payload), 'json');
-        $request->timeout(1);
+        $request->timeout(5);
         $request->expectsJson();
         $response = $request->send();
 
         if ($response->code !== 200) {
             throw new \RuntimeException('Cannot set Toxiproxy connection mode');
+        }
+    }
+
+    private function closeIfExists()
+    {
+        $url = sprintf('%s/proxies/%s', $this->api, $this->name);
+        $request = Request::delete($url);
+        $request->timeout(5);
+        try {
+            $request->send();
+        } catch (\Exception $exception) {
         }
     }
 
@@ -113,10 +126,22 @@ class ToxiProxy
      */
     public function close()
     {
+        if (!$this->isOpen) {
+            return;
+        }
+
         $url = sprintf('%s/proxies/%s', $this->api, $this->name);
-        $response = Request::delete($url)->send();
-        if ($response->code !== 204 && $response->code !== 404) {
-            throw new \RuntimeException('Cannot close Toxiproxy connection');
+        $request = Request::delete($url);
+        $request->timeout(5);
+        try {
+            $response = $request->send();
+            if ($response->code !== 204 && $response->code !== 404) {
+                throw new \RuntimeException('Cannot close Toxiproxy connection');
+            }
+        } catch (\Exception $exception) {
+            // Best-effort cleanup; a stale proxy is removed before the next open().
+        } finally {
+            $this->isOpen = false;
         }
     }
 

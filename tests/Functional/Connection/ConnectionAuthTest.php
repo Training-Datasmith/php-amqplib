@@ -67,7 +67,7 @@ class ConnectionAuthTest extends AbstractConnectionTest
         $userEndpoint = $this->getManagementBase() . 'api/users/' . $username;
         $passwordHash = '';
         if (!empty($password)) {
-            $salt = substr(md5(mt_rand()), 0, 4);
+            $salt = substr(md5((string) mt_rand()), 0, 4);
             $passwordHash = base64_encode($salt . hash('sha256', $salt . $password, true));
         }
         $request = Request::put(

@@ -44,7 +44,7 @@ jobs:
     name: PHP ${{ matrix.php }} + phpseclib ${{ matrix.phpseclib }}
     env:
       TOXIPROXY_HOST: localhost
-      TOXIPROXY_AMQP_TARGET: php-amqplib-rabbitmq
+      TOXIPROXY_AMQP_TARGET: host.docker.internal
       TOXIPROXY_AMQP_PORT: 5673
     steps:
     - name: Checkout
